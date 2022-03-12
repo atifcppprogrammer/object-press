@@ -1,0 +1,13 @@
+export const LOGIN = '/';
+export const SETTINGS = '/settings';
+export const PROFILE = '/profile';
+export const CREDS = '/credentials';
+export const DASHBOARD = '/dashboard';
+export const BLOGS = '/blogs';
+export const NEW_BLOG = '/new-blog';
+export const UPDATE_BLOG = '/update-blog/:id';
+export const POSTS = '/posts';
+export const NEW_POST = '/new-post';
+export const UPDATE_POSTS = '/update-post/:id';
+export const GALLERY = '/gallery';
+export const UPLOAD = '/upload';
