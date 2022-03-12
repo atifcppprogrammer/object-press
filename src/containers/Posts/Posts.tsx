@@ -68,10 +68,10 @@ export default function Posts() {
   const [posts, setPosts] = useState<Post[]>([]);
 
   async function getPosts() {
-    setPostsFetched(true);
     const posts = ((await dispatch(fetchPosts())) as any).payload as Post[];
 
     setPosts(posts);
+    setPostsFetched(true);
   }
 
   useEffect(() => {
@@ -86,8 +86,7 @@ export default function Posts() {
       setBlogsFetched(true);
       dispatch(fetchBlogs());
     }
-    // eslint-disable-next-line
-  }, [blogsFetched, _blogs]);
+  }, [blogsFetched, dispatch, _blogs]);
 
   const handleSearch = async () => {
     const value = search;
@@ -104,11 +103,13 @@ export default function Posts() {
   };
 
   const handleBlog = async ({ value }) => {
-    if (value?.length) {
+    if (value.length) {
       const posts = ((await dispatch(searchPostsByBlog(value[0].id))) as any)
         .payload as Post[];
 
       setPosts(posts);
+    } else {
+      await getPosts();
     }
 
     setSelectedBlog(value);
