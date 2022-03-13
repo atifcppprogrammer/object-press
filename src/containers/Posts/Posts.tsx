@@ -75,11 +75,11 @@ export default function Posts() {
   }
 
   useEffect(() => {
-    if (!postsFetched) {
+    if (!postsFetched || search?.length === 0) {
       getPosts();
     }
     // eslint-disable-next-line
-  }, [postsFetched]);
+  }, [postsFetched, search]);
 
   useEffect(() => {
     if (!_blogs?.length && !blogsFetched) {
