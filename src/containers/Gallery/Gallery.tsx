@@ -32,6 +32,12 @@ export default function Posts() {
     }
   }, [blogsFetched, dispatch, _blogs]);
 
+  useEffect(() => {
+    if (search?.length === 0) {
+      setImages(['']);
+    }
+  }, [search]);
+
   const handleSearch = async () => {
     const value = search;
     setImages(['']);
