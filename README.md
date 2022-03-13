@@ -22,20 +22,6 @@
     </a>
   </p>
 
-## Getting Started?
-
-Join the conversation via [Slack](https://join.slack.com/t/object-press/shared_invite/zt-15dx55b3l-ApogR4eHsbA8RWK_es5cLw)!
-
-## Contributing
-
-Contributions are what make the open source community such an amazing place to be learn, inspire, and create. <u>If you're interested in the project, please reach out.</u> Any contributions are **greatly appreciated**.
-
-1. Fork the Project, register via email (Google login does not work locally)
-2. Create your Feature/Fix Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request using the PR template, use semantic versioning when appropriate
-
 ## Main Features
 
 - 99.99% UP time for all content.
@@ -58,6 +44,20 @@ Contributions are what make the open source community such an amazing place to b
       },
     },
 ```
+
+## Getting Started
+
+Join the conversation via [Slack](https://join.slack.com/t/object-press/shared_invite/zt-15dx55b3l-ApogR4eHsbA8RWK_es5cLw)!
+
+## Contributing
+
+Contributions are what make the open source community such an amazing place to be learn, inspire, and create. <u>If you're interested in the project, please reach out.</u> Any contributions are **greatly appreciated**.
+
+1. Fork the Project, register via email (Google login does not work locally)
+2. Create your Feature/Fix Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request using the PR template, use semantic versioning when appropriate
 
 ## License
 
