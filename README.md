@@ -47,7 +47,7 @@
 
 ## Getting Started
 
-Join the conversation via [Slack](https://join.slack.com/t/object-press/shared_invite/zt-15dx55b3l-ApogR4eHsbA8RWK_es5cLw)!
+Join the conversation via [Slack](https://join.slack.com/t/object-press/shared_invite/zt-15dx55b3l-ApogR4eHsbA8RWK_es5cLw).
 
 ## Contributing
 
