@@ -36,7 +36,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "build": "react-scripts build",
     "format": "yarn prettier --write .",
     "docs": "jsdoc -c jsdoc.json"
   },
