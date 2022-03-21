@@ -1,7 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import Drawer from 'components/Drawer/Drawer';
 import { CloseIcon } from 'assets/icons/CloseIcon';
 import { useDrawerState, useDrawerDispatch } from 'context/DrawerContext';
+import { useHistory } from 'react-router-dom';
 
 /** Drawer Components */
 import NewBlogForm from '../Blogs/NewBlogForm';
@@ -12,6 +13,8 @@ import ProfileForm from 'containers/Settings/ProfileForm';
 import PostUpdateForm from 'containers/Posts/PostUpdateForm';
 import CredsForm from 'containers/Settings/CredsForm';
 import { CloseButton } from './DrawerItems.style';
+
+export type CloseDrawer = () => void;
 
 const DRAWER_COMPONENTS = {
   BLOG_FORM: NewBlogForm,
@@ -24,18 +27,34 @@ const DRAWER_COMPONENTS = {
 };
 
 export default function DrawerItems() {
+  const history = useHistory();
+
   const isOpen = useDrawerState('isOpen');
   const drawerComponent = useDrawerState('drawerComponent');
   const data = useDrawerState('data');
+  const consumedUrl = useDrawerState('consumedUrl');
+  const newUrl = useDrawerState('newUrl');
   const dispatch = useDrawerDispatch();
 
-  const closeDrawer = useCallback(() => {
+  const closeDrawer: CloseDrawer = useCallback(() => {
     dispatch({ type: 'CLOSE_DRAWER' });
+    dispatch({ type: 'CONSUME_URL_STACK' });
   }, [dispatch]);
-  if (!drawerComponent) {
+
+  useEffect(() => {
+    if (consumedUrl) history.push(consumedUrl);
+  }, [consumedUrl, history]);
+
+  useEffect(() => {
+    if (newUrl) history.push(newUrl);
+  }, [newUrl, history]);
+
+  if (drawerComponent.length === 0) {
     return null;
   }
-  const SpecificContent = DRAWER_COMPONENTS[drawerComponent];
+
+  const SpecificContent =
+    DRAWER_COMPONENTS[drawerComponent[drawerComponent.length - 1]];
 
   return (
     <Drawer
