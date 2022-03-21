@@ -66,6 +66,8 @@ Contributions are what make the open source community such an amazing place to b
   <img src="https://contrib.rocks/image?repo=ObjectPress/object-press" />
 </a>
 
+Made with [contrib.rocks](https://contrib.rocks).
+
 ## License
 
 Distributed under the ISC License.
