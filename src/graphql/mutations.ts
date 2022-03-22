@@ -81,13 +81,20 @@ export const REMOVE_POST_MUTATION = gql`
   }
 `;
 
-// upload image
-export const UPLOAD_IMAGE_STREAM = gql`
-  mutation SingleUploadStream($file: Upload!) {
-    singleUploadStream(file: $file) {
-      filename
-      mimetype
-      encoding
-    }
+// remove image from post
+export const REMOVE_IMAGE_MUTATION = gql`
+  mutation RemoveImage($image: RemoveImage!) {
+    removeImage(removePostImage: $image)
   }
 `;
+
+// upload image
+// export const UPLOAD_IMAGE_STREAM = gql`
+// mutation SingleUploadStream($file: Upload!) {
+//   singleUploadStream(file: $file) {
+//     filename
+//     mimetype
+//     encoding
+//   }
+// }
+//`;

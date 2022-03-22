@@ -153,3 +153,12 @@ export interface Notify {
   content: string;
   createDate: string;
 }
+
+/**
+ * @type Notify
+ */
+export type NotifyState = {
+  notifications: Notify[];
+  loading: boolean;
+  error?: string;
+};

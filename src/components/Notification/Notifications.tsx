@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import NotificationCard from './NotificationCard';
 import { Body, ClearAll, Header, Heading } from './Notification.style';
 
-export default function Notifications({ data, onClear }: any) {
+export default function Notifications({ data, onClear, removeOne }) {
+  const [remove, setRemove] = useState<string>('');
+
+  useEffect(() => {
+    if (remove.length) {
+      removeOne(remove);
+    }
+    // eslint-disable-next-line
+  }, [remove]);
+
   return (
     <div>
       <Header>
@@ -17,6 +26,7 @@ export default function Notifications({ data, onClear }: any) {
             date={item.createDate}
             title={item.title}
             id={item.id}
+            setRemove={setRemove}
           />
         ))}
       </Body>
