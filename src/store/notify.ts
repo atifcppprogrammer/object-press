@@ -5,7 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 import { query } from '../graphql/client';
 import { NOTIFICATIONS_QUERY } from 'graphql/queries';
-import { NotificationState, Notify } from 'types';
+import { NotifyState, Notify } from 'types';
 import { RootState } from 'store';
 
 export const fetchNotifications = createAsyncThunk<Notify[], void>(
@@ -27,7 +27,7 @@ export const fetchNotifications = createAsyncThunk<Notify[], void>(
   }
 );
 
-const initialState: NotificationState = {
+const initialState: NotifyState = {
   notifications: [],
   loading: false,
 };

@@ -155,9 +155,9 @@ export interface Notify {
 }
 
 /**
- * @type NotificationState
+ * @type Notify
  */
-export type NotificationState = {
+export type NotifyState = {
   notifications: Notify[];
   loading: boolean;
   error?: string;
