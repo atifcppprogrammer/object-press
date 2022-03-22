@@ -1,7 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { useHistory, useParams } from 'react-router';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { useDrawerDispatch } from 'context/DrawerContext';
 import Uploader from 'components/Uploader/Uploader';
 import Button, { KIND } from 'components/Button/Button';
 import DrawerBox from 'components/DrawerBox/DrawerBox';
@@ -29,6 +28,11 @@ import { Error } from '../../components/FormFields/FormFields';
 import useFormControl from 'hooks/useFormControl';
 import { FormControl } from 'baseui/form-control';
 import { validatePostTitle, validatePageTitle } from '../../utils';
+import { CloseDrawer } from 'containers/DrawerItems/DrawerItems';
+
+interface Props {
+  onClose: CloseDrawer;
+}
 
 const options = [
   { value: true, name: 'Active' },
@@ -88,16 +92,8 @@ const CustomSelect: React.FC<any> = (props) => {
   );
 };
 
-const NewPostForm: React.FC = () => {
-  const drawerDispatch = useDrawerDispatch();
-  const history = useHistory();
-  function close() {
-    drawerDispatch({ type: 'CLOSE_DRAWER' });
-    history.replace(`/posts`);
-  }
-
+const NewPostForm: React.FC<Props> = ({ onClose }) => {
   const { id } = useParams<{ id: string }>();
-  const closeDrawer = useCallback(close, [drawerDispatch, history]);
   const [slug, setSlug] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [isMdEditorVisited, setIsMdEditorVisited] = useState<boolean>(false);
@@ -231,7 +227,7 @@ const NewPostForm: React.FC = () => {
         })
       );
 
-      closeDrawer();
+      onClose();
     } catch (e) {
       console.log(e);
     }
@@ -487,7 +483,7 @@ const NewPostForm: React.FC = () => {
         <ButtonGroup>
           <Button
             kind={KIND.minimal}
-            onClick={closeDrawer}
+            onClick={onClose}
             overrides={{
               BaseButton: {
                 style: ({ $theme }) => ({

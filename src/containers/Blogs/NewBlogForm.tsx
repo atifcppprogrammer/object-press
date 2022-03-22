@@ -1,5 +1,4 @@
-import React, { useState, useCallback } from 'react';
-import { useDrawerDispatch } from 'context/DrawerContext';
+import React from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import Input from 'components/Input/Input';
 import Checkbox from 'components/CheckBox/CheckBox';
@@ -15,7 +14,6 @@ import {
   ButtonGroup,
 } from '../DrawerItems/DrawerItems.style';
 import { FormFields, FormLabel } from 'components/FormFields/FormFields';
-import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { createBlog } from 'store/blogs';
 import { FormControl } from 'baseui/form-control';
@@ -25,17 +23,14 @@ import {
   validateDescription,
   validateBuildHook,
 } from '../../utils/index';
+import { CloseDrawer } from 'containers/DrawerItems/DrawerItems';
 
-export default function NewBlogForm() {
-  const history = useHistory();
-  const drawerDispatch = useDrawerDispatch();
-  function close() {
-    drawerDispatch({ type: 'CLOSE_DRAWER' });
-    history.replace(`/blogs`);
-  }
+interface Props {
+  onClose: CloseDrawer;
+}
 
-  const closeDrawer = useCallback(close, [drawerDispatch, history]);
-  const [checked, setChecked] = useState<boolean>(true);
+export default function NewBlogForm({ onClose }: Props) {
+  const [checked, setChecked] = React.useState<boolean>(true);
   const dispatch = useDispatch();
 
   const {
@@ -76,7 +71,7 @@ export default function NewBlogForm() {
         })
       );
 
-      closeDrawer();
+      onClose();
     }
   }
 
@@ -190,7 +185,7 @@ export default function NewBlogForm() {
         <ButtonGroup>
           <Button
             kind={KIND.minimal}
-            onClick={closeDrawer}
+            onClick={onClose}
             overrides={{
               BaseButton: {
                 style: ({ $theme }) => ({

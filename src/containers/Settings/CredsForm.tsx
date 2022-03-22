@@ -13,17 +13,16 @@ import {
 } from '../DrawerItems/DrawerItems.style';
 import { FormFields, FormLabel } from 'components/FormFields/FormFields';
 import { useEffect } from 'react';
-import { useDrawerDispatch, useDrawerState } from 'context/DrawerContext';
+import { useDrawerState } from 'context/DrawerContext';
 import { useQuery } from '@apollo/client';
 import { CREDS_QUERY } from 'graphql/queries';
+import { CloseDrawer } from 'containers/DrawerItems/DrawerItems';
 
-type Props = any;
+interface Props {
+  onClose: CloseDrawer;
+}
 
-const CredsForm: React.FC<Props> = (props) => {
-  const dispatch = useDrawerDispatch();
-  const closeDrawer = useCallback(() => {
-    dispatch({ type: 'CLOSE_DRAWER' });
-  }, [dispatch]);
+const CredsForm: React.FC<Props> = ({ onClose }) => {
   const [userSecret, setUserSecret] = useState<string>('');
   const [appSecret, setAppSecret] = useState<string[]>([]);
   const [blogTitles, setBlogTitles] = useState<string[]>([]);
@@ -139,7 +138,7 @@ const CredsForm: React.FC<Props> = (props) => {
         <ButtonGroup>
           <Button
             kind={KIND.minimal}
-            onClick={closeDrawer}
+            onClick={onClose}
             overrides={{
               BaseButton: {
                 style: ({ $theme }) => ({

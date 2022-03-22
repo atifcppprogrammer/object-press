@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { useDrawerDispatch } from 'context/DrawerContext';
 import { Scrollbars } from 'react-custom-scrollbars';
 import Input from 'components/Input/Input';
 import Checkbox from 'components/CheckBox/CheckBox';
@@ -15,7 +14,7 @@ import {
   ButtonGroup,
 } from '../DrawerItems/DrawerItems.style';
 import { FormFields, FormLabel } from 'components/FormFields/FormFields';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_BLOG_QUERY } from 'graphql/queries';
 import { UPDATE_BLOG_MUTATION } from 'graphql/mutations';
@@ -26,15 +25,17 @@ import {
   validateBuildHook,
 } from '../../utils/index';
 import { FormControl } from 'baseui/form-control';
+import { CloseDrawer } from 'containers/DrawerItems/DrawerItems';
 
 interface BlogParams {
   id: string;
 }
 
-const UpdateBlogForm: React.FC = () => {
-  const history = useHistory();
-  const drawerDispatch = useDrawerDispatch();
+interface Props {
+  onClose: CloseDrawer;
+}
 
+const UpdateBlogForm: React.FC<Props> = ({ onClose }) => {
   const { id } = useParams<BlogParams>();
   const [blogName, setBlogName] = useState<string>('');
   const [buildHook, setBuildHook] = useState<string>('');
@@ -64,13 +65,6 @@ const UpdateBlogForm: React.FC = () => {
       getBlogInfo();
     }
   }, [getBlogInfo, id, data]);
-
-  function close() {
-    drawerDispatch({ type: 'CLOSE_DRAWER' });
-    history.replace(`/blogs`);
-  }
-
-  const closeDrawer = useCallback(close, [drawerDispatch, history]);
 
   const {
     value: newBlogName,
@@ -127,7 +121,7 @@ const UpdateBlogForm: React.FC = () => {
         },
       });
 
-      closeDrawer();
+      onClose();
     }
   }
 
@@ -241,7 +235,7 @@ const UpdateBlogForm: React.FC = () => {
           <ButtonGroup>
             <Button
               kind={KIND.minimal}
-              onClick={closeDrawer}
+              onClick={onClose}
               overrides={{
                 BaseButton: {
                   style: ({ $theme }) => ({
