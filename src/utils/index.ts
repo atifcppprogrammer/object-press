@@ -1,3 +1,5 @@
+import { InputValidation } from 'types';
+
 export const slugify = (text: string): string => {
   return text
     .toString()
@@ -22,13 +24,6 @@ export const isLength = (value: string, length: number): boolean => {
 
   return validLength;
 };
-
-export interface InputValidation {
-  (value: string): {
-    isValid: boolean;
-    errorMessage: string | null;
-  };
-}
 
 export const validateBlogName: InputValidation = (value) => {
   let isValid: boolean = isLength(slugify(value), 1);

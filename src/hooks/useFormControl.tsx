@@ -1,16 +1,5 @@
-import React, { useCallback, useState } from 'react';
-import { InputValidation } from '../utils/index';
-
-interface FormControlHook {
-  (validationFunction: InputValidation): {
-    value: string;
-    isValid: boolean;
-    onInputChangeHandler: (e: React.FormEvent<Element>) => void;
-    onInputBlurHandler: () => void;
-    shouldShowError: boolean;
-    setInitialValue: (initialValue: string) => void;
-  };
-}
+import { useCallback, useState } from 'react';
+import { FormControlHook } from 'types';
 
 const useFormControl: FormControlHook = (validationFunction) => {
   const [value, setValue] = useState<string>('');
