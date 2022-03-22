@@ -1,5 +1,5 @@
 import React from 'react';
-import useComponentSize from 'settings/useComponentSize';
+import useComponentSize from 'hooks/useComponentSize';
 import Sidebar from './Sidebar/Sidebar';
 import Topbar from './Topbar/Topbar';
 import DrawerItems from '../DrawerItems/DrawerItems';
@@ -10,7 +10,7 @@ import {
   ContentInnerWrapper,
 } from './Layout.style';
 import { styled } from 'baseui';
-import { useMedia } from 'settings/use-media';
+import { useMedia } from 'hooks/use-media';
 import { ProgressProvider } from 'context/ProgressContext';
 import ProgressItems from 'containers/ProgressItems/ProgressItems';
 import Footer from './Footer/Footer';

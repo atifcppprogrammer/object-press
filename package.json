@@ -1,6 +1,6 @@
 {
   "name": "object-press-app",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.3.15",
@@ -37,9 +37,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "dev": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts build",
     "format": "yarn prettier --write .",
-    "docs": "typedoc"
+    "docs": "typedoc && echo docs.objectpress.io>> docs/CNAME"
   },
   "pre-commit": [
     "format"

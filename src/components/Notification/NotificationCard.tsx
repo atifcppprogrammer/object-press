@@ -9,26 +9,19 @@ import {
   Details,
   Remove,
 } from './Notification.style';
-import { useMutation } from '@apollo/client';
-import { REMOVE_NOTIFICATION_MUTATION } from 'graphql/mutations';
-import { useHistory } from 'react-router';
 
-export default function NotificationCard({ message, date, title, id }) {
-  const history = useHistory();
-  const [remove] = useMutation(REMOVE_NOTIFICATION_MUTATION);
-
-  async function removeNotification(event) {
+export default function NotificationCard({
+  message,
+  date,
+  title,
+  id,
+  setRemove,
+}) {
+  const handleRemove = (event) => {
     event.preventDefault();
 
-    await remove({
-      variables: {
-        notification: {
-          id: id,
-        },
-      },
-    });
-    history.go(0);
-  }
+    setRemove(id);
+  };
 
   return (
     <Message>
@@ -38,7 +31,7 @@ export default function NotificationCard({ message, date, title, id }) {
         <Time>{dayjs(date).format('MM/DD/YY')}</Time>
 
         <form
-          onSubmit={(event) => removeNotification(event)}
+          onSubmit={(e) => handleRemove(e)}
           style={{ float: 'right', marginLeft: 'auto' }}
         >
           {message === 'No new notifications.' ? (

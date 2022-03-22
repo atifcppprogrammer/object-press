@@ -7,37 +7,36 @@ import {
   Svg,
   LogoutBtn,
 } from './Sidebar.style';
-import { DASHBOARD, POSTS, GALLERY, BLOGS, SETTINGS } from 'settings/constants';
 import { AuthContext } from 'context/auth';
 
 const sidebarMenus = [
   {
     name: 'Dashboard',
-    path: DASHBOARD,
+    path: '/dashboard',
     exact: true,
     icon: <i className="fas fa-tv" />,
   },
   {
     name: 'Blogs',
-    path: BLOGS,
+    path: '/blogs',
     exact: false,
     icon: <i className="fas fa-book" />,
   },
   {
     name: 'Posts',
-    path: POSTS,
+    path: '/posts',
     exact: false,
     icon: <i className="fas fa-file-export" />,
   },
   {
     name: 'Gallery',
-    path: GALLERY,
+    path: '/gallery',
     exact: true,
     icon: <i className="fas fa-images" />,
   },
   {
     name: 'Settings',
-    path: SETTINGS,
+    path: '/settings',
     exact: true,
     icon: <i className="fas fa-cogs" />,
   },
