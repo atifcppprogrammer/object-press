@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { useDrawerDispatch, useDrawerState } from 'context/DrawerContext';
 import dayjs from 'dayjs';
 // styled components
@@ -38,14 +37,17 @@ export const Blogs: React.FC = () => {
   const progressDispatch = useProgressDispatch();
   const confirmed = useProgressState('confirmed');
   const dispatch = useDispatch();
-  const history = useHistory();
   const [checkedId, setCheckedId] = useState<string>('');
   const isOpen = useDrawerState('isOpen');
 
   const openDrawer = useCallback(() => {
-    drawerDispatch({ type: 'OPEN_DRAWER', drawerComponent: 'BLOG_FORM' });
-    history.push('/new-blog');
-  }, [drawerDispatch, history]);
+    drawerDispatch({
+      type: 'OPEN_DRAWER',
+      drawerComponent: 'BLOG_FORM',
+      backUrl: '/blogs',
+      newUrl: '/new-blog',
+    });
+  }, [drawerDispatch]);
 
   const [search, setSearch] = useState<string>('');
   const [useCss, theme] = themedUseStyletron();
@@ -106,8 +108,9 @@ export const Blogs: React.FC = () => {
     drawerDispatch({
       type: 'OPEN_DRAWER',
       drawerComponent: 'UPDATE_BLOG_FORM',
+      backUrl: '/blogs',
+      newUrl: `/update-blog/${checkedId}`,
     });
-    history.push(`/update-blog/${checkedId}`);
   }
 
   function handleRemove() {

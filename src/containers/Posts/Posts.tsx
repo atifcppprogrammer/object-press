@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { useDrawerDispatch, useDrawerState } from 'context/DrawerContext';
 import dayjs from 'dayjs';
 // styled components
@@ -53,12 +52,15 @@ export default function Posts() {
   const drawerDispatch = useDrawerDispatch();
   const progressDispatch = useProgressDispatch();
   const confirmed = useProgressState('confirmed');
-  const history = useHistory();
   const [checkedId, setCheckedId] = useState<string>('');
   const openDrawer = useCallback(() => {
-    drawerDispatch({ type: 'OPEN_DRAWER', drawerComponent: 'POST_FORM' });
-    history.push('/new-post');
-  }, [drawerDispatch, history]);
+    drawerDispatch({
+      type: 'OPEN_DRAWER',
+      drawerComponent: 'POST_FORM',
+      backUrl: '/posts',
+      newUrl: '/new-post',
+    });
+  }, [drawerDispatch]);
 
   const dispatch = useDispatch();
   const [postsFetched, setPostsFetched] = useState(false);
@@ -130,8 +132,9 @@ export default function Posts() {
     drawerDispatch({
       type: 'OPEN_DRAWER',
       drawerComponent: 'POST_UPDATE_FORM',
+      backUrl: '/posts',
+      newUrl: `/update-post/${checkedId}`,
     });
-    history.push(`/update-post/${checkedId}`);
   };
 
   function handleRemove() {

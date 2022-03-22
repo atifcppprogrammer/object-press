@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { useHistory } from 'react-router';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useDrawerDispatch } from 'context/DrawerContext';
 import Uploader from 'components/Uploader/Uploader';
@@ -29,6 +28,11 @@ import { Error } from '../../components/FormFields/FormFields';
 import useFormControl from '../../hooks/useFormControl';
 import { validatePostTitle, validatePageTitle } from '../../utils';
 import { FormControl } from 'baseui/form-control';
+import { CloseDrawer } from 'containers/DrawerItems/DrawerItems';
+
+interface Props {
+  onClose: CloseDrawer;
+}
 
 const options = [
   { value: true, name: 'Active' },
@@ -88,15 +92,8 @@ const CustomSelect: React.FC<any> = (props) => {
   );
 };
 
-const NewPostForm: React.FC = () => {
+const NewPostForm: React.FC<Props> = ({ onClose }) => {
   const drawerDispatch = useDrawerDispatch();
-  const history = useHistory();
-  function close() {
-    drawerDispatch({ type: 'CLOSE_DRAWER' });
-    history.replace(`/posts`);
-  }
-
-  const closeDrawer = useCallback(close, [drawerDispatch, history]);
   const [slug, setSlug] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [isMdEditorVisited, setIsMdEditorVisited] = useState<boolean>(false);
@@ -113,6 +110,15 @@ const NewPostForm: React.FC = () => {
 
   const blogs = useSelector(blogsSelector());
   const [blogsFetched, setBlogsFetched] = useState(false);
+
+  const openDrawer = useCallback(() => {
+    drawerDispatch({
+      type: 'OPEN_DRAWER',
+      drawerComponent: 'MANAGE_IMAGES',
+      backUrl: '/posts',
+      newUrl: '/manage-images',
+    });
+  }, [drawerDispatch]);
 
   useEffect(() => {
     if (!blogs?.length && !blogsFetched) {
@@ -207,7 +213,7 @@ const NewPostForm: React.FC = () => {
         })
       );
 
-      closeDrawer();
+      onClose();
     } catch (e) {
       console.log(e);
     }
@@ -469,7 +475,7 @@ const NewPostForm: React.FC = () => {
         <ButtonGroup>
           <Button
             kind={KIND.minimal}
-            onClick={closeDrawer}
+            onClick={onClose}
             overrides={{
               BaseButton: {
                 style: ({ $theme }) => ({

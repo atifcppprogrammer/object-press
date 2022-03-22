@@ -1,7 +1,5 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { useHistory } from 'react-router';
+import React, { useState, useEffect } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { useDrawerDispatch } from 'context/DrawerContext';
 import Button, { KIND } from 'components/Button/Button';
 import DrawerBox from 'components/DrawerBox/DrawerBox';
 import { Row, Col } from 'components/FlexBox/FlexBox';
@@ -16,17 +14,14 @@ import {
 } from '../DrawerItems/DrawerItems.style';
 import { useDispatch, useSelector } from 'react-redux';
 import { blogsSelector, fetchBlogs } from 'store/blogs';
+import { CloseDrawer } from 'containers/DrawerItems/DrawerItems';
 // import { addPost } from 'store/posts';
 
-const NewGalleryForm: React.FC = () => {
-  const drawerDispatch = useDrawerDispatch();
-  const history = useHistory();
-  function close() {
-    drawerDispatch({ type: 'CLOSE_DRAWER' });
-    history.replace(`/gallery`);
-  }
+interface Props {
+  onClose: CloseDrawer;
+}
 
-  const closeDrawer = useCallback(close, [drawerDispatch, history]);
+const NewGalleryForm: React.FC<Props> = ({ onClose }) => {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
 
@@ -121,7 +116,7 @@ const NewGalleryForm: React.FC = () => {
         <ButtonGroup>
           <Button
             kind={KIND.minimal}
-            onClick={closeDrawer}
+            onClick={onClose}
             overrides={{
               BaseButton: {
                 style: ({ $theme }) => ({

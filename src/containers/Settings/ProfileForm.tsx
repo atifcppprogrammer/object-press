@@ -13,8 +13,7 @@ import {
   ButtonGroup,
 } from '../DrawerItems/DrawerItems.style';
 import { FormFields, FormLabel } from 'components/FormFields/FormFields';
-import { useHistory } from 'react-router';
-import { useDrawerDispatch, useDrawerState } from 'context/DrawerContext';
+import { useDrawerState } from 'context/DrawerContext';
 import { useMutation, useQuery } from '@apollo/client';
 import { PROFILE_QUERY } from 'graphql/queries';
 import { PROFILE_MUTATION } from 'graphql/mutations';
@@ -26,17 +25,13 @@ import {
   validateWebsite,
 } from '../../utils';
 import { FormControl } from 'baseui/form-control';
+import { CloseDrawer } from 'containers/DrawerItems/DrawerItems';
 
-type Props = any;
+interface Props {
+  onClose: CloseDrawer;
+}
 
-const ProfileForm: React.FC<Props> = (props) => {
-  const dispatch = useDrawerDispatch();
-  const history = useHistory();
-  const closeDrawer = useCallback(() => {
-    dispatch({ type: 'CLOSE_DRAWER' });
-    history.replace(`/settings`);
-  }, [dispatch, history]);
-
+const ProfileForm: React.FC<Props> = ({ onClose }) => {
   const [username, setUsername] = useState<string>('');
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
@@ -94,7 +89,7 @@ const ProfileForm: React.FC<Props> = (props) => {
       })
       .catch((err) => console.log(err));
 
-    closeDrawer();
+    onClose();
   }
 
   ////////////////////////////
@@ -328,7 +323,7 @@ const ProfileForm: React.FC<Props> = (props) => {
           <ButtonGroup>
             <Button
               kind={KIND.minimal}
-              onClick={closeDrawer}
+              onClick={onClose}
               overrides={{
                 BaseButton: {
                   style: ({ $theme }) => ({

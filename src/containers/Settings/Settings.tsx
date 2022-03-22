@@ -3,7 +3,6 @@ import SettingsCard from 'components/SettingsCard/SettingsCard';
 import { useDrawerDispatch } from 'context/DrawerContext';
 import { withStyle } from 'baseui';
 import { Grid, Row, Col as Column } from 'components/FlexBox/FlexBox';
-import { useHistory } from 'react-router';
 
 const Col = withStyle(Column, () => ({
   '@media only screen and (max-width: 767px)': {
@@ -16,19 +15,25 @@ const Col = withStyle(Column, () => ({
 }));
 
 export default function Settings() {
-  const history = useHistory();
-
   const dispatch = useDrawerDispatch();
 
   const openProfileForm = useCallback(() => {
-    dispatch({ type: 'OPEN_DRAWER', drawerComponent: 'PROFILE_FORM' });
-    history.push('/profile');
-  }, [dispatch, history]);
+    dispatch({
+      type: 'OPEN_DRAWER',
+      drawerComponent: 'PROFILE_FORM',
+      backUrl: '/settings',
+      newUrl: '/profile',
+    });
+  }, [dispatch]);
 
   const opeCredsForm = useCallback(() => {
-    dispatch({ type: 'OPEN_DRAWER', drawerComponent: 'CREDS_FORM' });
-    history.push('/credentials');
-  }, [dispatch, history]);
+    dispatch({
+      type: 'OPEN_DRAWER',
+      drawerComponent: 'CREDS_FORM',
+      backUrl: '/settings',
+      newUrl: '/credentials',
+    });
+  }, [dispatch]);
 
   return (
     <Grid fluid={true}>
