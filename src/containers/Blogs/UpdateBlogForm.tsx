@@ -72,26 +72,6 @@ const UpdateBlogForm: React.FC = () => {
 
   const closeDrawer = useCallback(close, [drawerDispatch, history]);
 
-  async function handleSubmit(event) {
-    event.preventDefault();
-
-    await updateBlog({
-      variables: {
-        blog: {
-          appId: id,
-          title: newBlogName,
-          active: checked,
-          hook: newBuildHook,
-          description: newDescription,
-        },
-      },
-    });
-
-    closeDrawer();
-  }
-
-  ////////////////////////////
-
   const {
     value: newBlogName,
     isValid: newBlogNameIsValid,
@@ -102,7 +82,6 @@ const UpdateBlogForm: React.FC = () => {
   } = useFormControl(validateBlogName);
   const {
     value: newBuildHook,
-    isValid: newBuildHookIsValid,
     onInputChangeHandler: onNewBuildHookChangeHandler,
     onInputBlurHandler: onNewBuildHookBlurHandler,
     shouldShowError: shouldNewBuildHookShowError,
@@ -117,8 +96,6 @@ const UpdateBlogForm: React.FC = () => {
     setInitialValue: setInitialDescription,
   } = useFormControl(validateDescription);
 
-  ////////////////////////////
-
   useEffect(() => {
     setInitialBlogName(blogName);
     setInitialBuildHook(buildHook);
@@ -132,8 +109,27 @@ const UpdateBlogForm: React.FC = () => {
     setInitialDescription,
   ]);
 
-  const isFormValid: boolean =
-    newBlogNameIsValid && newDescriptionIsValid && newBuildHookIsValid;
+  const isFormValid: boolean = newBlogNameIsValid && newDescriptionIsValid;
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    if (isFormValid) {
+      await updateBlog({
+        variables: {
+          blog: {
+            appId: id,
+            title: newBlogName,
+            active: checked,
+            hook: newBuildHook,
+            description: newDescription,
+          },
+        },
+      });
+
+      closeDrawer();
+    }
+  }
 
   return (
     <>
@@ -176,7 +172,6 @@ const UpdateBlogForm: React.FC = () => {
                       }
                     >
                       <Input
-                        required
                         value={newBlogName}
                         onChange={onNewBlogNameChangeHandler}
                         onBlur={onNewBlogNameBlurHandler}
@@ -213,7 +208,6 @@ const UpdateBlogForm: React.FC = () => {
                       }
                     >
                       <Textarea
-                        required
                         value={newDescription}
                         onChange={onNewDescriptionChangeHandler}
                         onBlur={onNewDescriptionBlurHandler}

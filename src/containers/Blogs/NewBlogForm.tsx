@@ -35,30 +35,8 @@ export default function NewBlogForm() {
   }
 
   const closeDrawer = useCallback(close, [drawerDispatch, history]);
-  //const [blogName, setBlogName] = useState<string>('');
-  //const [buildHook, setBuildHook] = useState<string>('');
-  //const [description, setDescription] = useState<string>('');
   const [checked, setChecked] = useState<boolean>(true);
   const dispatch = useDispatch();
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-
-    await dispatch(
-      createBlog({
-        blog: {
-          title: blogName,
-          active: checked,
-          hook: buildHook,
-          description: description,
-        },
-      })
-    );
-
-    closeDrawer();
-  }
-
-  //////////////////////////
 
   const {
     value: blogName,
@@ -69,7 +47,6 @@ export default function NewBlogForm() {
   } = useFormControl(validateBlogName);
   const {
     value: buildHook,
-    isValid: buildHookIsValid,
     onInputChangeHandler: onBuildHookChangeHandler,
     onInputBlurHandler: onBuildHookBlurHandler,
     shouldShowError: shouldBuildHookShowError,
@@ -82,10 +59,26 @@ export default function NewBlogForm() {
     shouldShowError: shouldDescriptionShowError,
   } = useFormControl(validateDescription);
 
-  //////////////////////////
+  const isFormValid: boolean = blogNameIsValid && descriptionIsValid;
 
-  const isFormValid: boolean =
-    blogNameIsValid && descriptionIsValid && buildHookIsValid;
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    if (isFormValid) {
+      await dispatch(
+        createBlog({
+          blog: {
+            title: blogName,
+            active: checked,
+            hook: buildHook,
+            description: description,
+          },
+        })
+      );
+
+      closeDrawer();
+    }
+  }
 
   return (
     <>
@@ -133,7 +126,6 @@ export default function NewBlogForm() {
                       onBlur={onBlogNameBlurHandler}
                       positive={validateBlogName(blogName).isValid}
                       error={shouldBlogNameShowError}
-                      required
                     />
                   </FormControl>
                 </FormFields>
@@ -152,7 +144,6 @@ export default function NewBlogForm() {
                       onBlur={onBuildHookBlurHandler}
                       positive={validateBuildHook(buildHook).isValid}
                       error={shouldBuildHookShowError}
-                      required
                     />
                   </FormControl>
                 </FormFields>
@@ -171,7 +162,6 @@ export default function NewBlogForm() {
                       onBlur={onDescriptionBlurHandler}
                       positive={validateDescription(description).isValid}
                       error={shouldDescriptionShowError}
-                      required
                     />
                   </FormControl>
                 </FormFields>
