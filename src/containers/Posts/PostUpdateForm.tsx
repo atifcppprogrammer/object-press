@@ -196,6 +196,33 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
     );
   };
 
+  const {
+    value: newPostTitle,
+    isValid: postTitleIsValid,
+    onInputChangeHandler: onNewPostTitleChangeHandler,
+    onInputBlurHandler: onNewPostTitleBlurHandler,
+    shouldShowError: shouldNewPostTitleShowError,
+    setInitialValue: setInitialPostTitle,
+  } = useFormControl(validatePostTitle);
+  const {
+    value: newPageTitle,
+    isValid: pageTitleIsValid,
+    onInputChangeHandler: onNewPageTitleChangeHandler,
+    onInputBlurHandler: onNewPageTitleBlurHandler,
+    shouldShowError: shouldNewPageTitleShowError,
+    setInitialValue: setInitialPageTitle,
+  } = useFormControl(validatePageTitle);
+
+  const isMdEditorValid = content.length > 0;
+  const shouldMdEditorShowError = isMdEditorVisited && !isMdEditorValid;
+
+  const isFormValid: boolean =
+    postTitleIsValid &&
+    pageTitleIsValid &&
+    isMdEditorValid &&
+    blogId[0]?.id?.length > 10 &&
+    active[0]?.value !== undefined;
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -206,30 +233,32 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
 
     setLoading(true);
 
-    try {
-      await dispatch(
-        editPost({
-          post: {
-            postId: id,
+    if (isFormValid) {
+      try {
+        await dispatch(
+          editPost({
             post: {
-              title: newPostTitle,
-              publishAt: publishDate.toISOString(),
-              content,
-              pageTitle: newPageTitle,
-              slug: slugify(newPageTitle),
-              keywords,
-              description,
-              images: images?.length ? images : [''],
-              altTags: altTags?.length ? altTags : [''],
+              postId: id,
+              post: {
+                title: newPostTitle,
+                publishAt: publishDate.toISOString(),
+                content,
+                pageTitle: newPageTitle,
+                slug: slugify(newPageTitle),
+                keywords,
+                description,
+                images: images?.length ? images : [''],
+                altTags: altTags?.length ? altTags : [''],
+              },
+              active: active[0].value,
             },
-            active: active[0].value,
-          },
-        })
-      );
+          })
+        );
 
-      onClose();
-    } catch (e) {
-      console.log(e);
+        onClose();
+      } catch (e) {
+        console.log(e);
+      }
     }
 
     setLoading(false);
@@ -255,24 +284,6 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
 
     setContent(value!);
   };
-
-  const isMdEditorValid = content.length > 0;
-  const shouldMdEditorShowError = isMdEditorVisited && !isMdEditorValid;
-
-  const {
-    value: newPostTitle,
-    onInputChangeHandler: onNewPostTitleChangeHandler,
-    onInputBlurHandler: onNewPostTitleBlurHandler,
-    shouldShowError: shouldNewPostTitleShowError,
-    setInitialValue: setInitialPostTitle,
-  } = useFormControl(validatePostTitle);
-  const {
-    value: newPageTitle,
-    onInputChangeHandler: onNewPageTitleChangeHandler,
-    onInputBlurHandler: onNewPageTitleBlurHandler,
-    shouldShowError: shouldNewPageTitleShowError,
-    setInitialValue: setInitialPageTitle,
-  } = useFormControl(validatePageTitle);
 
   return (
     <>
@@ -308,7 +319,6 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                 <FormFields>
                   <FormLabel>Blog</FormLabel>
                   <CustomSelect
-                    required
                     options={blogs}
                     labelKey="title"
                     valueKey="id"
@@ -339,7 +349,6 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                     }
                   >
                     <Input
-                      required
                       name="post title"
                       value={newPostTitle}
                       onChange={onNewPostTitleChangeHandler}
@@ -381,7 +390,6 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                     }
                   >
                     <Input
-                      required
                       name="page title"
                       value={newPageTitle}
                       onChange={(e) => {
@@ -397,13 +405,7 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
 
                 <FormFields>
                   <FormLabel>URL Slug</FormLabel>
-                  <Input
-                    readOnly
-                    required
-                    type="text"
-                    name="url slug"
-                    value={slug}
-                  />
+                  <Input readOnly type="text" name="url slug" value={slug} />
                 </FormFields>
 
                 <FormFields>
@@ -430,7 +432,6 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                 <FormFields>
                   <FormLabel>Status</FormLabel>
                   <CustomSelect
-                    required
                     options={options}
                     labelKey="name"
                     valueKey="value"
@@ -503,6 +504,7 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
 
           <Button
             type="submit"
+            disabled={!isFormValid}
             overrides={{
               BaseButton: {
                 style: ({ $theme }) => ({

@@ -26,7 +26,7 @@ export const isLength = (value: string, length: number): boolean => {
 };
 
 export const validateBlogName: InputValidation = (value) => {
-  let isValid: boolean = isLength(slugify(value), 1);
+  let isValid: boolean = isLength(value, 1);
   let errorMessage: string | null = null;
 
   if (isValid) {
@@ -66,7 +66,7 @@ export const validateBuildHook: InputValidation = (value) => {
 };
 
 export const validateDescription: InputValidation = (value) => {
-  let isValid: boolean = isLength(slugify(value), 10);
+  let isValid: boolean = isLength(value, 10);
   let errorMessage: string | null = null;
 
   if (isValid) {
@@ -82,7 +82,7 @@ export const validateDescription: InputValidation = (value) => {
 };
 
 export const validateUsername: InputValidation = (value) => {
-  let isValid: boolean = isLength(slugify(value), 1);
+  let isValid: boolean = isLength(value, 1);
   let errorMessage: string | null = null;
 
   isValid
@@ -95,7 +95,7 @@ export const validateUsername: InputValidation = (value) => {
 };
 
 export const validateFirstName: InputValidation = (value) => {
-  let isValid: boolean = isLength(slugify(value), 1);
+  let isValid: boolean = isLength(value, 1);
   let errorMessage: string | null = null;
 
   isValid
@@ -108,7 +108,7 @@ export const validateFirstName: InputValidation = (value) => {
 };
 
 export const validateLastName: InputValidation = (value) => {
-  let isValid: boolean = isLength(slugify(value), 1);
+  let isValid: boolean = isLength(value, 1);
   let errorMessage: string | null = null;
 
   isValid
@@ -145,7 +145,7 @@ export const validateWebsite: InputValidation = (value) => {
 };
 
 export const validatePostTitle: InputValidation = (value) => {
-  let isValid: boolean = isLength(slugify(value), 1);
+  let isValid: boolean = isLength(value, 1);
   let errorMessage: string | null = null;
 
   isValid
@@ -158,7 +158,7 @@ export const validatePostTitle: InputValidation = (value) => {
 };
 
 export const validatePageTitle: InputValidation = (value) => {
-  let isValid: boolean = isLength(slugify(value), 1);
+  let isValid: boolean = isLength(value, 1);
   let errorMessage: string | null = null;
 
   isValid

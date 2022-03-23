@@ -111,6 +111,7 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
   const blogs = useSelector(blogsSelector());
   const [blogsFetched, setBlogsFetched] = useState(false);
 
+  // eslint-disable-next-line
   const openDrawer = useCallback(() => {
     drawerDispatch({
       type: 'OPEN_DRAWER',
@@ -166,6 +167,31 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
     );
   };
 
+  const {
+    value: postTitle,
+    isValid: postTitleIsValid,
+    onInputChangeHandler: onPostTitleChangeHandler,
+    onInputBlurHandler: onPostTitleBlurHandler,
+    shouldShowError: shouldPostTitleShowError,
+  } = useFormControl(validatePostTitle);
+  const {
+    value: pageTitle,
+    isValid: pageTitleIsValid,
+    onInputChangeHandler: onPageTitleChangeHandler,
+    onInputBlurHandler: onPageTitleBlurHandler,
+    shouldShowError: shouldPageTitleShowError,
+  } = useFormControl(validatePageTitle);
+
+  const isMdEditorValid = content.length > 0;
+  const shouldMdEditorShowError = isMdEditorVisited && !isMdEditorValid;
+
+  const isFormValid: boolean =
+    postTitleIsValid &&
+    pageTitleIsValid &&
+    isMdEditorValid &&
+    blogId[0]?.id?.length > 10 &&
+    active[0]?.value !== undefined;
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -179,45 +205,46 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
     const imageUrls: string[] = [];
     const stamp = Date.now();
 
-    try {
-      for (const file of uploads) {
-        const formData = new FormData();
-        let name = `${stamp}/${file.name}`;
+    if (isFormValid) {
+      try {
+        for (const file of uploads) {
+          const formData = new FormData();
+          let name = `${stamp}/${file.name}`;
 
-        formData.append(name, file);
+          formData.append(name, file);
 
-        // Send this form data to a Rest API
-        await addNewImage(formData);
+          // Send this form data to a Rest API
+          await addNewImage(formData);
 
-        let path = `https://share.objectpress.io/${name}`;
-        imageUrls.push(path);
-      }
+          let path = `https://share.objectpress.io/${name}`;
+          imageUrls.push(path);
+        }
 
-      await dispatch(
-        addPost({
-          post: {
-            appId: blogId[0].id,
+        await dispatch(
+          addPost({
             post: {
-              title: postTitle,
-              publishAt: publishAt.toISOString(),
-              content,
-              pageTitle,
-              slug: slugify(pageTitle),
-              keywords,
-              description,
-              images: imageUrls?.length ? imageUrls : [''],
-              altTags,
+              appId: blogId[0].id,
+              post: {
+                title: postTitle,
+                publishAt: publishAt.toISOString(),
+                content,
+                pageTitle,
+                slug: slugify(pageTitle),
+                keywords,
+                description,
+                images: imageUrls?.length ? imageUrls : [''],
+                altTags,
+              },
+              active: active[0].value,
             },
-            active: active[0].value,
-          },
-        })
-      );
+          })
+        );
 
-      onClose();
-    } catch (e) {
-      console.log(e);
+        onClose();
+      } catch (e) {
+        console.log(e);
+      }
     }
-
     setLoading(false);
   };
 
@@ -254,22 +281,6 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
     setContent(value!);
   };
 
-  const isMdEditorValid = content.length > 0;
-  const shouldMdEditorShowError = isMdEditorVisited && !isMdEditorValid;
-
-  const {
-    value: postTitle,
-    onInputChangeHandler: onPostTitleChangeHandler,
-    onInputBlurHandler: onPostTitleBlurHandler,
-    shouldShowError: shouldPostTitleShowError,
-  } = useFormControl(validatePostTitle);
-  const {
-    value: pageTitle,
-    onInputChangeHandler: onPageTitleChangeHandler,
-    onInputBlurHandler: onPageTitleBlurHandler,
-    shouldShowError: shouldPageTitleShowError,
-  } = useFormControl(validatePageTitle);
-
   return (
     <>
       <DrawerTitleWrapper>
@@ -302,7 +313,6 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                 <FormFields>
                   <FormLabel>Blog</FormLabel>
                   <CustomSelect
-                    required
                     options={blogs}
                     labelKey="title"
                     valueKey="id"
@@ -333,7 +343,6 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                     }
                   >
                     <Input
-                      required
                       name="post title"
                       value={postTitle}
                       onChange={onPostTitleChangeHandler}
@@ -375,7 +384,6 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                     }
                   >
                     <Input
-                      required
                       name="page title"
                       value={pageTitle}
                       onChange={(e) => {
@@ -391,17 +399,11 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
 
                 <FormFields>
                   <FormLabel>URL Slug</FormLabel>
-                  <Input
-                    readOnly
-                    required
-                    type="text"
-                    name="url slug"
-                    value={slug}
-                  />
+                  <Input readOnly type="text" name="url slug" value={slug} />
                 </FormFields>
 
                 <FormFields>
-                  <FormLabel>Meta Keywords (comma seperated)</FormLabel>
+                  <FormLabel>Keywords (comma seperated)</FormLabel>
                   <Input
                     value={keywords}
                     onChange={(e: any) => handleKeywordChange(e.target.value)}
@@ -410,7 +412,7 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                   />
                 </FormFields>
                 <FormFields>
-                  <FormLabel>Meta Description</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <Input
                     value={description}
                     onChange={(e: any) =>
@@ -424,7 +426,6 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                 <FormFields>
                   <FormLabel>Status</FormLabel>
                   <CustomSelect
-                    required
                     options={options}
                     labelKey="name"
                     valueKey="value"
@@ -495,6 +496,7 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
 
           <Button
             type="submit"
+            disabled={!isFormValid}
             overrides={{
               BaseButton: {
                 style: ({ $theme }) => ({
