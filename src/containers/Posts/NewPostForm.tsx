@@ -6,8 +6,12 @@ import Button, { KIND } from 'components/Button/Button';
 import DrawerBox from 'components/DrawerBox/DrawerBox';
 import { Row, Col } from 'components/FlexBox/FlexBox';
 import Input from 'components/Input/Input';
-import Select from 'components/Select/Select';
-import { FormFields, FormLabel } from 'components/FormFields/FormFields';
+import {
+  FormFields,
+  FormLabel,
+  Error,
+  Message,
+} from 'components/FormFields/FormFields';
 import { InLineLoader } from 'components/InlineLoader/InlineLoader';
 import MDEditor from '@uiw/react-md-editor';
 import {
@@ -24,11 +28,11 @@ import { blogsSelector, fetchBlogs } from 'store/blogs';
 import { addPost } from 'store/posts';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Error } from '../../components/FormFields/FormFields';
 import useFormControl from '../../hooks/useFormControl';
 import { validatePostTitle, validatePageTitle } from '../../utils';
 import { FormControl } from 'baseui/form-control';
 import { CloseDrawer } from 'containers/DrawerItems/DrawerItems';
+import { CustomSelect } from 'components/Select/CustomSelect';
 
 interface Props {
   onClose: CloseDrawer;
@@ -38,59 +42,6 @@ const options = [
   { value: true, name: 'Active' },
   { value: false, name: 'Pending' },
 ];
-
-const CustomSelect: React.FC<any> = (props) => {
-  return (
-    <Select
-      {...props}
-      overrides={{
-        Placeholder: {
-          style: ({ $theme }) => {
-            return {
-              ...$theme.typography.fontBold14,
-              color: $theme.colors.textNormal,
-            };
-          },
-        },
-        DropdownListItem: {
-          style: ({ $theme }) => {
-            return {
-              ...$theme.typography.fontBold14,
-              color: $theme.colors.textNormal,
-            };
-          },
-        },
-        OptionContent: {
-          style: ({ $theme, $selected }) => {
-            return {
-              ...$theme.typography.fontBold14,
-              color: $selected
-                ? $theme.colors.textDark
-                : $theme.colors.textNormal,
-            };
-          },
-        },
-        SingleValue: {
-          style: ({ $theme }) => {
-            return {
-              ...$theme.typography.fontBold14,
-              color: $theme.colors.textNormal,
-            };
-          },
-        },
-        Popover: {
-          props: {
-            overrides: {
-              Body: {
-                style: { zIndex: 5 },
-              },
-            },
-          },
-        },
-      }}
-    />
-  );
-};
 
 const NewPostForm: React.FC<Props> = ({ onClose }) => {
   const drawerDispatch = useDrawerDispatch();
@@ -370,8 +321,10 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                     value={content}
                     onChange={onMdEditorChangeHandler}
                   />
-                  {shouldMdEditorShowError && (
-                    <Error>Content should not be empty.</Error>
+                  {shouldMdEditorShowError ? (
+                    <Error>Content should not be empty</Error>
+                  ) : (
+                    <Message>Content should not be empty</Message>
                   )}
                 </FormFields>
 
@@ -403,7 +356,7 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                 </FormFields>
 
                 <FormFields>
-                  <FormLabel>Keywords (comma seperated)</FormLabel>
+                  <FormLabel>Keywords/Tags (comma seperated)</FormLabel>
                   <Input
                     value={keywords}
                     onChange={(e: any) => handleKeywordChange(e.target.value)}
@@ -432,6 +385,7 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                     placeholder="Active or Pending"
                     value={active}
                     onChange={handleActiveChange}
+                    status={active}
                   />
                 </FormFields>
               </DrawerBox>
