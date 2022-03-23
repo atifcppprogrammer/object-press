@@ -29,7 +29,11 @@ import { addPost } from 'store/posts';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import useFormControl from '../../hooks/useFormControl';
-import { validatePostTitle, validatePageTitle } from '../../utils';
+import {
+  validatePostTitle,
+  validatePageTitle,
+  validateDescription,
+} from '../../utils';
 import { FormControl } from 'baseui/form-control';
 import { CloseDrawer } from 'containers/DrawerItems/DrawerItems';
 import { CustomSelect } from 'components/Select/CustomSelect';
@@ -48,7 +52,6 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
   const [slug, setSlug] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [isMdEditorVisited, setIsMdEditorVisited] = useState<boolean>(false);
-  const [description, setDescription] = useState<string>('');
   const [active, setActive] = useState([]);
   const [uploads, setUploads] = useState<File[]>([]);
   const [altTags, setAltTags] = useState<string[]>(['']);
@@ -132,6 +135,13 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
     onInputBlurHandler: onPageTitleBlurHandler,
     shouldShowError: shouldPageTitleShowError,
   } = useFormControl(validatePageTitle);
+  const {
+    value: description,
+    isValid: descriptionIsValid,
+    onInputChangeHandler: onDescriptionChangeHandler,
+    onInputBlurHandler: onDescriptionBlurHandler,
+    shouldShowError: shouldDescriptionShowError,
+  } = useFormControl(validateDescription);
 
   const isMdEditorValid = content.length > 0;
   const shouldMdEditorShowError = isMdEditorVisited && !isMdEditorValid;
@@ -140,6 +150,7 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
     postTitleIsValid &&
     pageTitleIsValid &&
     isMdEditorValid &&
+    descriptionIsValid &&
     blogId[0]?.id?.length > 10 &&
     active[0]?.value !== undefined;
 
@@ -182,7 +193,7 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                 pageTitle,
                 slug: slugify(pageTitle),
                 keywords,
-                description,
+                description: description,
                 images: imageUrls?.length ? imageUrls : [''],
                 altTags,
               },
@@ -218,10 +229,6 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
 
   const handleKeywordChange = (value: string) => {
     setKeywords(value);
-  };
-
-  const handleDescriptionChange = (value: string) => {
-    setDescription(value);
   };
 
   const onMdEditorChangeHandler = (value: string) => {
@@ -366,14 +373,20 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                 </FormFields>
                 <FormFields>
                   <FormLabel>Description</FormLabel>
-                  <Input
-                    value={description}
-                    onChange={(e: any) =>
-                      handleDescriptionChange(e.target.value)
+                  <FormControl
+                    error={
+                      shouldDescriptionShowError &&
+                      validateDescription(description).errorMessage
                     }
-                    type="text"
-                    name="meta description"
-                  />
+                  >
+                    <Input
+                      value={description}
+                      onChange={onDescriptionChangeHandler}
+                      onBlur={onDescriptionBlurHandler}
+                      positive={validateDescription(description).isValid}
+                      error={shouldDescriptionShowError}
+                    />
+                  </FormControl>
                 </FormFields>
 
                 <FormFields>

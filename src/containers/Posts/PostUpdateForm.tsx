@@ -30,7 +30,11 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import useFormControl from 'hooks/useFormControl';
 import { FormControl } from 'baseui/form-control';
-import { validatePostTitle, validatePageTitle } from '../../utils';
+import {
+  validatePostTitle,
+  validatePageTitle,
+  validateDescription,
+} from '../../utils';
 import { CloseDrawer } from 'containers/DrawerItems/DrawerItems';
 import { CustomSelect } from 'components/Select/CustomSelect';
 
@@ -48,7 +52,6 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
   const [slug, setSlug] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [isMdEditorVisited, setIsMdEditorVisited] = useState<boolean>(false);
-  const [description, setDescription] = useState<string>('');
   const [active, setActive] = useState([]);
   const [altTags, setAltTags] = useState<string[]>(['']);
   const [loading, setLoading] = useState(false);
@@ -98,7 +101,7 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
       setInitialPageTitle(pageTitle);
       setSlug(slugify(pageTitle));
       setContent(content);
-      setDescription(description);
+      setInitialDescription(description);
       setActive(options.filter((o) => o.value === post.active));
       setKeywords(keywords);
       setBlogId(blogs.filter((b) => b.id === post.appId));
@@ -163,6 +166,14 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
     shouldShowError: shouldNewPageTitleShowError,
     setInitialValue: setInitialPageTitle,
   } = useFormControl(validatePageTitle);
+  const {
+    value: newDescription,
+    isValid: newDescriptionIsValid,
+    onInputChangeHandler: onNewDescriptionChangeHandler,
+    onInputBlurHandler: onNewDescriptionBlurHandler,
+    shouldShowError: shouldNewDescriptionShowError,
+    setInitialValue: setInitialDescription,
+  } = useFormControl(validateDescription);
 
   const isMdEditorValid = content.length > 0;
   const shouldMdEditorShowError = isMdEditorVisited && !isMdEditorValid;
@@ -171,6 +182,7 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
     postTitleIsValid &&
     pageTitleIsValid &&
     isMdEditorValid &&
+    newDescriptionIsValid &&
     blogId[0]?.id?.length > 10 &&
     active[0]?.value !== undefined;
 
@@ -197,7 +209,7 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                 pageTitle: newPageTitle,
                 slug: slugify(newPageTitle),
                 keywords,
-                description,
+                description: newDescription,
                 images: images?.length ? images : [''],
                 altTags: altTags?.length ? altTags : [''],
               },
@@ -222,10 +234,6 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
   const handleKeywordChange = (value: string) => {
     console.log(value);
     setKeywords(value);
-  };
-
-  const handleDescriptionChange = (value: string) => {
-    setDescription(value);
   };
 
   const onMdEditorChangeHandler = (value: string) => {
@@ -372,14 +380,20 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                 </FormFields>
                 <FormFields>
                   <FormLabel>Description</FormLabel>
-                  <Input
-                    value={description}
-                    onChange={(e: any) =>
-                      handleDescriptionChange(e.target.value)
+                  <FormControl
+                    error={
+                      shouldNewDescriptionShowError &&
+                      validateDescription(newDescription).errorMessage
                     }
-                    type="text"
-                    name="meta description"
-                  />
+                  >
+                    <Input
+                      value={newDescription}
+                      onChange={onNewDescriptionChangeHandler}
+                      onBlur={onNewDescriptionBlurHandler}
+                      positive={validateDescription(newDescription).isValid}
+                      error={shouldNewDescriptionShowError}
+                    />
+                  </FormControl>
                 </FormFields>
 
                 <FormFields>
