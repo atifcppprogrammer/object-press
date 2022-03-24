@@ -12,6 +12,7 @@ import Sidebar from '../Layout/Sidebar/Sidebar';
 import ProfileForm from 'containers/Settings/ProfileForm';
 import PostUpdateForm from 'containers/Posts/PostUpdateForm';
 import CredsForm from 'containers/Settings/CredsForm';
+import NewGalleryForm from 'containers/Gallery/NewGalleryForm';
 import { CloseButton } from './DrawerItems.style';
 
 export type CloseDrawer = () => void;
@@ -24,6 +25,7 @@ const DRAWER_COMPONENTS = {
   PROFILE_FORM: ProfileForm,
   CREDS_FORM: CredsForm,
   SIDEBAR: Sidebar,
+  GALLERY_FORM: NewGalleryForm,
 };
 
 export default function DrawerItems() {

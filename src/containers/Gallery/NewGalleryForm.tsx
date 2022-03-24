@@ -21,7 +21,7 @@ interface Props {
   onClose: CloseDrawer;
 }
 
-const NewGalleryForm: React.FC<Props> = ({ onClose }) => {
+const NewGalleryForm: React.FC<Props> = ({ onClose }: Props) => {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
 
@@ -89,23 +89,21 @@ const NewGalleryForm: React.FC<Props> = ({ onClose }) => {
             <Col lg={8}>
               <DrawerBox>
                 <FormFields>
-                  <FormLabel>Post Title</FormLabel>
+                  <FormLabel>Gallery Name</FormLabel>
                   <Input
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    required
-                    maxLegnth={25}
                     name="name"
                   />
                 </FormFields>
 
                 <FormFields>
-                  <FormLabel>Meta Description</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <Input
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     type="text"
-                    name="meta description"
+                    name="description"
                   />
                 </FormFields>
               </DrawerBox>

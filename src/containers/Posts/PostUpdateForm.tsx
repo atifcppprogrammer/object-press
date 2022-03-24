@@ -474,7 +474,7 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
             disabled={!isFormValid}
             overrides={{
               BaseButton: {
-                style: ({ $theme }) => ({
+                style: () => ({
                   width: '50%',
                   borderTopLeftRadius: '3px',
                   borderTopRightRadius: '3px',
