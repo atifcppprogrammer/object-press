@@ -50,100 +50,100 @@ function PrivateRoute({ children, ...rest }) {
 const Routes = () => {
   return (
     <AuthProvider>
-      <Suspense fallback={<InLineLoader />}>
-        <Switch>
-          <PrivateRoute exact={true} path="/dashboard">
-            <AdminLayout>
-              <Suspense fallback={<InLineLoader />}>
-                <Dashboard />
-              </Suspense>
-            </AdminLayout>
-          </PrivateRoute>
-          <PrivateRoute path="/posts">
-            <AdminLayout>
-              <Suspense fallback={<InLineLoader />}>
-                <Posts />
-              </Suspense>
-            </AdminLayout>
-          </PrivateRoute>
-          <PrivateRoute path="/new-post">
-            <AdminLayout>
-              <Suspense fallback={<InLineLoader />}>
-                <Posts />
-              </Suspense>
-            </AdminLayout>
-          </PrivateRoute>
-          <PrivateRoute path="/update-post/:id">
-            <AdminLayout>
-              <Suspense fallback={<InLineLoader />}>
-                <Posts />
-              </Suspense>
-            </AdminLayout>
-          </PrivateRoute>
-          <PrivateRoute path="/gallery">
-            <AdminLayout>
-              <Suspense fallback={<InLineLoader />}>
-                <Gallery />
-              </Suspense>
-            </AdminLayout>
-          </PrivateRoute>
-          <PrivateRoute path="/upload">
-            <AdminLayout>
-              <Suspense fallback={<InLineLoader />}>
-                <Gallery />
-              </Suspense>
-            </AdminLayout>
-          </PrivateRoute>
-          <PrivateRoute path="/blogs">
-            <AdminLayout>
-              <Suspense fallback={<InLineLoader />}>
-                <Blogs />
-              </Suspense>
-            </AdminLayout>
-          </PrivateRoute>
-          <PrivateRoute path="/new-blog">
-            <AdminLayout>
-              <Suspense fallback={<InLineLoader />}>
-                <Blogs />
-              </Suspense>
-            </AdminLayout>
-          </PrivateRoute>
-          <PrivateRoute path="/update-blog/:id">
-            <AdminLayout>
-              <Suspense fallback={<InLineLoader />}>
-                <Blogs />
-              </Suspense>
-            </AdminLayout>
-          </PrivateRoute>
-          <PrivateRoute path="/settings">
-            <AdminLayout>
-              <Suspense fallback={<InLineLoader />}>
-                <Settings />
-              </Suspense>
-            </AdminLayout>
-          </PrivateRoute>
-          <PrivateRoute path="/profile">
-            <AdminLayout>
-              <Suspense fallback={<InLineLoader />}>
-                <Settings />
-              </Suspense>
-            </AdminLayout>
-          </PrivateRoute>
-          <PrivateRoute path="/credentials">
-            <AdminLayout>
-              <Suspense fallback={<InLineLoader />}>
-                <Settings />
-              </Suspense>
-            </AdminLayout>
-          </PrivateRoute>
-          <Route path="/">
+      <Switch>
+        <PrivateRoute exact={true} path="/dashboard">
+          <AdminLayout>
             <Suspense fallback={<InLineLoader />}>
-              <Login /> <Redirect from="/" to="/" />
+              <Dashboard />
             </Suspense>
-          </Route>
+          </AdminLayout>
+        </PrivateRoute>
+        <PrivateRoute path="/posts">
+          <AdminLayout>
+            <Suspense fallback={<InLineLoader />}>
+              <Posts />
+            </Suspense>
+          </AdminLayout>
+        </PrivateRoute>
+        <PrivateRoute path="/new-post">
+          <AdminLayout>
+            <Suspense fallback={<InLineLoader />}>
+              <Posts />
+            </Suspense>
+          </AdminLayout>
+        </PrivateRoute>
+        <PrivateRoute path="/update-post/:id">
+          <AdminLayout>
+            <Suspense fallback={<InLineLoader />}>
+              <Posts />
+            </Suspense>
+          </AdminLayout>
+        </PrivateRoute>
+        <PrivateRoute path="/gallery">
+          <AdminLayout>
+            <Suspense fallback={<InLineLoader />}>
+              <Gallery />
+            </Suspense>
+          </AdminLayout>
+        </PrivateRoute>
+        <PrivateRoute path="/upload">
+          <AdminLayout>
+            <Suspense fallback={<InLineLoader />}>
+              <Gallery />
+            </Suspense>
+          </AdminLayout>
+        </PrivateRoute>
+        <PrivateRoute path="/blogs">
+          <AdminLayout>
+            <Suspense fallback={<InLineLoader />}>
+              <Blogs />
+            </Suspense>
+          </AdminLayout>
+        </PrivateRoute>
+        <PrivateRoute path="/new-blog">
+          <AdminLayout>
+            <Suspense fallback={<InLineLoader />}>
+              <Blogs />
+            </Suspense>
+          </AdminLayout>
+        </PrivateRoute>
+        <PrivateRoute path="/update-blog/:id">
+          <AdminLayout>
+            <Suspense fallback={<InLineLoader />}>
+              <Blogs />
+            </Suspense>
+          </AdminLayout>
+        </PrivateRoute>
+        <PrivateRoute path="/settings">
+          <AdminLayout>
+            <Suspense fallback={<InLineLoader />}>
+              <Settings />
+            </Suspense>
+          </AdminLayout>
+        </PrivateRoute>
+        <PrivateRoute path="/profile">
+          <AdminLayout>
+            <Suspense fallback={<InLineLoader />}>
+              <Settings />
+            </Suspense>
+          </AdminLayout>
+        </PrivateRoute>
+        <PrivateRoute path="/credentials">
+          <AdminLayout>
+            <Suspense fallback={<InLineLoader />}>
+              <Settings />
+            </Suspense>
+          </AdminLayout>
+        </PrivateRoute>
+        <Route path="/">
+          <Suspense fallback={<InLineLoader />}>
+            <Login /> <Redirect from="/" to="/" />
+          </Suspense>
+        </Route>
+        <Suspense fallback={<InLineLoader />}>
           <Route component={NotFound} />
-        </Switch>
-      </Suspense>
+        </Suspense>
+      </Switch>
     </AuthProvider>
   );
 };

@@ -32,7 +32,7 @@ export const validateBlogName: InputValidation = (value) => {
   if (isValid) {
     errorMessage = null;
   } else {
-    errorMessage = 'Blog Name should not be empty.';
+    errorMessage = 'Blog Name should not be empty';
   }
 
   return {
@@ -48,11 +48,7 @@ export const validateBuildHook: InputValidation = (value) => {
   let errorMessage: string | null = null;
 
   if (!isValueUrlFormat) {
-    errorMessage = 'Build Hook should be a valid URL.';
-  }
-
-  if (!isValueNotEmpty) {
-    errorMessage = 'Build Hook should not be empty.';
+    errorMessage = 'Build Hook should be a valid URL';
   }
 
   if (isValid) {
@@ -72,7 +68,7 @@ export const validateDescription: InputValidation = (value) => {
   if (isValid) {
     errorMessage = null;
   } else {
-    errorMessage = 'Description should have at least 10 characters.';
+    errorMessage = 'Description should have at least 10 characters';
   }
 
   return {
@@ -127,11 +123,11 @@ export const validateWebsite: InputValidation = (value) => {
   let errorMessage: string | null = null;
 
   if (!isValueUrlFormat) {
-    errorMessage = 'Website should be a valid URL.';
+    errorMessage = 'Website should be a valid URL';
   }
 
   if (!isValueNotEmpty) {
-    errorMessage = 'Website should not be empty.';
+    errorMessage = 'Website should not be empty';
   }
 
   if (isValid) {
