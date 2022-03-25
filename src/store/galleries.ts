@@ -3,10 +3,11 @@ import {
   createSelector,
   createSlice,
 } from '@reduxjs/toolkit';
-import { query } from '../graphql/client';
+import { query, mutate } from '../graphql/client';
 import { GALLERIES_QUERY } from '../graphql/queries';
-import { GalleryList, GalleryState } from 'types';
+import { GalleryList, GalleryState, NewGallery } from 'types';
 import { RootState } from './index';
+import { GALLERY_MUTATION } from 'graphql/mutations';
 
 /**
  * TODO: add logic to backend
@@ -24,6 +25,24 @@ export const fetchGalleries = createAsyncThunk<
     );
 
     return galleries;
+  } catch (error) {
+    rejectWithValue(error.message);
+  }
+});
+
+export const createGallery = createAsyncThunk<
+  void,
+  { gallery: NewGallery },
+  { rejectValue: string }
+>('galleries/createGallery', async ({ gallery }, { rejectWithValue }) => {
+  try {
+    await mutate<{ gallery: NewGallery }, undefined>(
+      'addGallery',
+      GALLERY_MUTATION,
+      {
+        gallery,
+      }
+    );
   } catch (error) {
     rejectWithValue(error.message);
   }
@@ -51,6 +70,18 @@ const galleriesSlice = createSlice({
       state.fetched = true;
     });
     builder.addCase(fetchGalleries.rejected, (state, { payload }) => {
+      state.error = payload;
+      state.loading = false;
+    });
+    builder.addCase(createGallery.pending, (state, { payload }) => {
+      state.error = undefined;
+      state.loading = true;
+    });
+    builder.addCase(createGallery.fulfilled, (state, { payload }) => {
+      state.error = undefined;
+      state.loading = false;
+    });
+    builder.addCase(createGallery.rejected, (state, { payload }) => {
       state.error = payload;
       state.loading = false;
     });

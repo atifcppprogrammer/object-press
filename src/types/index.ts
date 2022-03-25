@@ -50,6 +50,14 @@ export interface Gallery {
 }
 
 /**
+ * @type NewGallery
+ */
+export interface NewGallery {
+  name: string;
+  description: string;
+}
+
+/**
  * @type Gallery
  */
 export interface GalleryList {

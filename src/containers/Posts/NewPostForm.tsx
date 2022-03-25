@@ -328,9 +328,11 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                     value={content}
                     onChange={onMdEditorChangeHandler}
                   />
-                  {shouldMdEditorShowError ? (
+                  {shouldMdEditorShowError && isMdEditorVisited && (
                     <Error>Content should not be empty</Error>
-                  ) : (
+                  )}
+
+                  {!isMdEditorVisited && (
                     <Message>Content should not be empty</Message>
                   )}
                 </FormFields>

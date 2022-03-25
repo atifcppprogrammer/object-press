@@ -13,7 +13,7 @@ import Fade from 'react-reveal/Fade';
 import ProductCard from 'components/ProductCard/ProductCard';
 import Placeholder from 'components/Placeholder/Placeholder';
 import { Button } from 'baseui/button';
-import { useDrawerDispatch } from 'context/DrawerContext';
+import { useDrawerDispatch, useDrawerState } from 'context/DrawerContext';
 import { mapBlogImages } from 'utils';
 
 export default function Posts() {
@@ -44,13 +44,14 @@ export default function Posts() {
   const [content, setContent] = useState<string[]>(['']);
   const [tags, setTags] = useState<string[]>(['']);
   const [imageNum, setImageNum] = useState<number[]>([]);
+  const isOpen = useDrawerState('isOpen');
 
   useEffect(() => {
-    if (!_galleries?.length && !galleriesFetched) {
+    if ((!_galleries?.length && !galleriesFetched) || !isOpen) {
       setGalleriesFetched(true);
       dispatch(fetchGalleries());
     }
-  }, [galleriesFetched, dispatch, _galleries]);
+  }, [galleriesFetched, dispatch, _galleries, isOpen]);
 
   async function handleBlog(value: Gallery[]) {
     const posts = ((await dispatch(searchPostsByBlog(value[0].id))) as any)
@@ -70,7 +71,7 @@ export default function Posts() {
     setImages(['']);
 
     if (value[0]?.blog) {
-      handleBlog(value);
+      await handleBlog(value);
     } else if (value[0]?.blog === false) {
       alert(value[0]?.blog);
     }

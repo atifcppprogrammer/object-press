@@ -88,6 +88,12 @@ export const REMOVE_IMAGE_MUTATION = gql`
   }
 `;
 
+export const GALLERY_MUTATION = gql`
+  mutation AddGallery($gallery: CreateGallery!) {
+    addGallery(newGalleryData: $gallery)
+  }
+`;
+
 // upload image
 // export const UPLOAD_IMAGE_STREAM = gql`
 // mutation SingleUploadStream($file: Upload!) {
