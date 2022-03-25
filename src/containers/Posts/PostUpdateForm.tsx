@@ -232,7 +232,6 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
   };
 
   const handleKeywordChange = (value: string) => {
-    console.log(value);
     setKeywords(value);
   };
 

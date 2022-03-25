@@ -1,14 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Select from 'components/Select/Select';
-// import Input from 'components/Input/Input';
 import { Header } from 'components/Wrapper.style';
 import { Grid } from 'components/FlexBox/FlexBox';
 import { LoaderItem, Row, Col } from './Gallery.style';
 // redux
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { searchPostsByBlog } from 'store/posts';
 import { Gallery, Post } from 'types';
-import { galleriesSelector, fetchGalleries } from 'store/galleries';
+import { fetchGalleries } from 'store/galleries';
 import Fade from 'react-reveal/Fade';
 import ProductCard from 'components/ProductCard/ProductCard';
 import Placeholder from 'components/Placeholder/Placeholder';
@@ -30,28 +29,37 @@ export default function Posts() {
   const handleUpdate = async () => {
     drawerDispatch({
       type: 'OPEN_DRAWER',
-      drawerComponent: 'POST_UPDATE_FORM',
+      drawerComponent: 'GALLERY_UPDATE_FORM',
       backUrl: '/gallery',
-      newUrl: `/update-gallery/id`,
+      newUrl: `/update-gallery`,
     });
   };
 
   const dispatch = useDispatch();
   const [selectedGallery, setSelectedGallery] = useState([]);
   const [galleriesFetched, setGalleriesFetched] = useState(false);
-  const _galleries = useSelector(galleriesSelector());
+  const [galleries, setGalleries] = useState<Gallery[]>([]);
   const [images, setImages] = useState<string[]>(['']);
   const [content, setContent] = useState<string[]>(['']);
   const [tags, setTags] = useState<string[]>(['']);
   const [imageNum, setImageNum] = useState<number[]>([]);
   const isOpen = useDrawerState('isOpen');
 
+  async function getGalleries() {
+    const galleryList = ((await dispatch(fetchGalleries())) as any)
+      .payload as Gallery[];
+
+    setGalleries(galleryList);
+
+    setGalleriesFetched(true);
+  }
+
   useEffect(() => {
-    if ((!_galleries?.length && !galleriesFetched) || !isOpen) {
-      setGalleriesFetched(true);
-      dispatch(fetchGalleries());
+    if (!galleriesFetched && !isOpen) {
+      getGalleries();
     }
-  }, [galleriesFetched, dispatch, _galleries, isOpen]);
+    // eslint-disable-next-line
+  }, [galleriesFetched, galleries, isOpen]);
 
   async function handleBlog(value: Gallery[]) {
     const posts = ((await dispatch(searchPostsByBlog(value[0].id))) as any)
@@ -93,7 +101,7 @@ export default function Posts() {
               <Row>
                 <Col md={2} lg={2}>
                   <Select
-                    options={_galleries}
+                    options={galleries}
                     labelKey="name"
                     valueKey="id"
                     placeholder="Gallery"
@@ -129,7 +137,7 @@ export default function Posts() {
                   <Button
                     onClick={handleUpdate}
                     startEnhancer={() => (
-                      <i className="fas fa-edit" aria-label="edit blog" />
+                      <i className="fas fa-edit" aria-label="edit gallery" />
                     )}
                     overrides={{
                       BaseButton: {
@@ -152,7 +160,7 @@ export default function Posts() {
                   <Button
                     onClick={handleUpdate}
                     startEnhancer={() => (
-                      <i className="fas fa-camera" aria-label="build hook" />
+                      <i className="fas fa-camera" aria-label="add image" />
                     )}
                     overrides={{
                       BaseButton: {

@@ -88,9 +88,17 @@ export const REMOVE_IMAGE_MUTATION = gql`
   }
 `;
 
+// create gallery
 export const GALLERY_MUTATION = gql`
   mutation AddGallery($gallery: CreateGallery!) {
     addGallery(newGalleryData: $gallery)
+  }
+`;
+
+// update gallery
+export const UPDATE_GALLERY_MUTATION = gql`
+  mutation UpdateGallery($gallery: UpdateGallery!) {
+    updateGallery(updateGalleryData: $gallery)
   }
 `;
 

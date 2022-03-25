@@ -58,19 +58,10 @@ export interface NewGallery {
 }
 
 /**
- * @type Gallery
- */
-export interface GalleryList {
-  id: string;
-  name: string;
-  images: string[];
-}
-
-/**
  * @type GalleryState
  */
 export type GalleryState = {
-  galleries: Gallery[] | GalleryList[];
+  galleries: Gallery[];
   loading: boolean;
   error?: string;
   fetched: boolean;

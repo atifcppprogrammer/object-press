@@ -43,18 +43,6 @@ export const BLOGS_QUERY = gql`
   }
 `;
 
-// get blogs
-export const GALLERIES_QUERY = gql`
-  query GetGalleryList {
-    getGalleryList {
-      id
-      name
-      description
-      blog
-    }
-  }
-`;
-
 // get blog
 export const GET_BLOG_QUERY = gql`
   query GetBlogs($blog: String!) {
@@ -102,7 +90,7 @@ export const POSTS_QUERY = gql`
 `;
 
 // get post
-export const POST_QUERY = gql`
+export const GET_POST_QUERY = gql`
   query GetPost($post: String!) {
     getPost(postId: $post) {
       _id
@@ -163,6 +151,29 @@ export const SEARCH_BLOGS_QUERY = gql`
       active
       modifiedDate
       createDate
+    }
+  }
+`;
+
+// get galleries
+export const GALLERIES_QUERY = gql`
+  query GetGalleryList {
+    getGalleryList {
+      id
+      name
+      description
+      blog
+    }
+  }
+`;
+
+// get gallery
+export const GALLERY_QUERY = gql`
+  query GetGallery($gallery: String!) {
+    getGallery(galleryId: $gallery) {
+      id
+      name
+      description
     }
   }
 `;

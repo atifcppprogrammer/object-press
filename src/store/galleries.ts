@@ -5,7 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 import { query, mutate } from '../graphql/client';
 import { GALLERIES_QUERY } from '../graphql/queries';
-import { GalleryList, GalleryState, NewGallery } from 'types';
+import { Gallery, GalleryState, NewGallery } from 'types';
 import { RootState } from './index';
 import { GALLERY_MUTATION } from 'graphql/mutations';
 
@@ -13,12 +13,12 @@ import { GALLERY_MUTATION } from 'graphql/mutations';
  * TODO: add logic to backend
  */
 export const fetchGalleries = createAsyncThunk<
-  GalleryList[],
+  Gallery[],
   undefined,
   { rejectValue: string }
 >('galleries/fetchGalleries', async (payload, { rejectWithValue }) => {
   try {
-    const galleries = await query<any, GalleryList[]>(
+    const galleries = await query<any, Gallery[]>(
       'getGalleryList',
       GALLERIES_QUERY,
       {}
