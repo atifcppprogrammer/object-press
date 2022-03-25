@@ -72,7 +72,7 @@ const Routes = () => {
             </Suspense>
           </AdminLayout>
         </PrivateRoute>
-        <PrivateRoute path="/update-post">
+        <PrivateRoute path="/update-post/:id">
           <AdminLayout>
             <Suspense fallback={<InLineLoader />}>
               <Posts />

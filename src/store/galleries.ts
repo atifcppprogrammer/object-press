@@ -4,14 +4,11 @@ import {
   createSlice,
 } from '@reduxjs/toolkit';
 import { query, mutate } from '../graphql/client';
-import { GALLERIES_QUERY } from '../graphql/queries';
+import { GALLERIES_QUERY, GALLERY_QUERY } from '../graphql/queries';
 import { Gallery, GalleryState, NewGallery } from 'types';
 import { RootState } from './index';
 import { GALLERY_MUTATION } from 'graphql/mutations';
 
-/**
- * TODO: add logic to backend
- */
 export const fetchGalleries = createAsyncThunk<
   Gallery[],
   undefined,
@@ -29,6 +26,27 @@ export const fetchGalleries = createAsyncThunk<
     rejectWithValue(error.message);
   }
 });
+
+export const fetchGallery = createAsyncThunk<Gallery, string>(
+  'galleries/fetchGallery',
+  async (id) => {
+    try {
+      const gallery = await query<{ gallery: string }, Gallery>(
+        'getGallery',
+        GALLERY_QUERY,
+        {
+          gallery: id,
+        }
+      );
+
+      return gallery;
+    } catch (error) {
+      console.log(error);
+
+      return undefined;
+    }
+  }
+);
 
 export const createGallery = createAsyncThunk<
   void,

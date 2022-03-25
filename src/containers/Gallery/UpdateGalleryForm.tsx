@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import Input from 'components/Input/Input';
 import { Textarea } from 'components/Textarea/Textarea';
@@ -13,18 +13,16 @@ import {
   ButtonGroup,
 } from '../DrawerItems/DrawerItems.style';
 import { Error, FormFields, FormLabel } from 'components/FormFields/FormFields';
-import { useMutation, useQuery } from '@apollo/client';
-import { GALLERY_QUERY } from 'graphql/queries';
-import { UPDATE_BLOG_MUTATION } from 'graphql/mutations';
+import { useMutation } from '@apollo/client';
+import { UPDATE_GALLERY_MUTATION } from 'graphql/mutations';
 import useFormControl from '../../hooks/useFormControl';
 import { validateDescription } from '../../utils/index';
 import { FormControl } from 'baseui/form-control';
 import { CloseDrawer } from 'containers/DrawerItems/DrawerItems';
 import { useDispatch } from 'react-redux';
-import { fetchGalleries } from 'store/galleries';
+import { fetchGalleries, fetchGallery } from 'store/galleries';
 import { Gallery } from 'types';
-import { useDrawerState } from 'context/DrawerContext';
-import Select from 'components/Select/Select';
+import { CustomSelect } from 'components/Select/CustomSelect';
 
 interface Props {
   onClose: CloseDrawer;
@@ -36,12 +34,7 @@ const UpdateGalleryForm: React.FC<Props> = ({ onClose }) => {
   const [galleriesFetched, setGalleriesFetched] = useState(false);
   const [galleries, setGalleries] = useState<Gallery[]>([]);
   const [name, setName] = useState<string>('');
-  const isOpen = useDrawerState('isOpen');
-  const { data } = useQuery(GALLERY_QUERY, {
-    variables: {
-      galleryId: selectedGallery,
-    },
-  });
+  const [updateGallery] = useMutation(UPDATE_GALLERY_MUTATION);
 
   async function getGalleries() {
     let galleryList = ((await dispatch(fetchGalleries())) as any)
@@ -50,34 +43,30 @@ const UpdateGalleryForm: React.FC<Props> = ({ onClose }) => {
     galleryList = galleryList.filter((_) => !_.blog);
 
     setGalleries(galleryList);
-
     setGalleriesFetched(true);
   }
 
   useEffect(() => {
-    if (!galleriesFetched && isOpen) {
+    if (!galleriesFetched && !selectedGallery[0]?.id) {
       getGalleries();
     }
     // eslint-disable-next-line
   }, [galleriesFetched, galleries]);
 
-  const [updateGallery] = useMutation(UPDATE_BLOG_MUTATION);
-
-  function fetchGallery() {
-    const gallery = data?.getGallery;
-
-    setName(gallery.name);
-    setInitialDescription(gallery.description);
-  }
-
-  // eslint-disable-next-line
-  const getGalleryInfo = useCallback(fetchGallery, [data]);
-
   useEffect(() => {
-    if (selectedGallery && data?.getGallery) {
-      getGalleryInfo();
+    async function fetchData(value: string) {
+      let galleryList = ((await dispatch(fetchGallery(value))) as any)
+        .payload as Gallery;
+
+      setName(galleryList.name);
+      setInitialDescription(galleryList.description);
     }
-  }, [getGalleryInfo, selectedGallery, data]);
+
+    if (selectedGallery[0]?.id) {
+      fetchData(selectedGallery[0]?.id);
+    }
+    // eslint-disable-next-line
+  }, [selectedGallery]);
 
   const [isNameVisited, setIsNameVisited] = useState<boolean>(false);
 
@@ -112,8 +101,8 @@ const UpdateGalleryForm: React.FC<Props> = ({ onClose }) => {
     if (isFormValid) {
       await updateGallery({
         variables: {
-          blog: {
-            galleryId: selectedGallery,
+          gallery: {
+            galleryId: selectedGallery[0]?.id,
             name: name,
             description: newDescription,
           },
@@ -154,12 +143,12 @@ const UpdateGalleryForm: React.FC<Props> = ({ onClose }) => {
             <Col lg={8}>
               <DrawerBox>
                 <FormFields>
-                  <FormLabel>Gallery</FormLabel>
-                  <Select
+                  <FormLabel>Blog</FormLabel>
+                  <CustomSelect
                     options={galleries}
                     labelKey="name"
                     valueKey="id"
-                    placeholder="Gallery Name"
+                    placeholder="Blog Title"
                     value={selectedGallery}
                     onChange={handleSearch}
                     searchable={false}
@@ -169,7 +158,7 @@ const UpdateGalleryForm: React.FC<Props> = ({ onClose }) => {
             </Col>
           </Row>
 
-          {selectedGallery?.length > 0 && (
+          {selectedGallery[0]?.id && (
             <Row>
               <Col lg={4}>
                 <FieldDetails>

@@ -55,11 +55,11 @@ export default function Posts() {
   }
 
   useEffect(() => {
-    if (!galleriesFetched && !isOpen) {
+    if (!galleriesFetched || !isOpen) {
       getGalleries();
     }
     // eslint-disable-next-line
-  }, [galleriesFetched, galleries, isOpen]);
+  }, [galleriesFetched, isOpen]);
 
   async function handleBlog(value: Gallery[]) {
     const posts = ((await dispatch(searchPostsByBlog(value[0].id))) as any)
