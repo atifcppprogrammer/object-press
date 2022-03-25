@@ -7,13 +7,14 @@ import { LoaderItem, Row, Col } from './Gallery.style';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 import { searchPostsByBlog } from 'store/posts';
-import { Content, Gallery, Post } from 'types';
+import { Gallery, Post } from 'types';
 import { galleriesSelector, fetchGalleries } from 'store/galleries';
 import Fade from 'react-reveal/Fade';
 import ProductCard from 'components/ProductCard/ProductCard';
 import Placeholder from 'components/Placeholder/Placeholder';
 import { Button } from 'baseui/button';
 import { useDrawerDispatch } from 'context/DrawerContext';
+import { mapBlogImages } from 'utils';
 
 export default function Posts() {
   const drawerDispatch = useDrawerDispatch();
@@ -37,7 +38,6 @@ export default function Posts() {
 
   const dispatch = useDispatch();
   const [selectedGallery, setSelectedGallery] = useState([]);
-  const [search, setSearch] = useState('');
   const [galleriesFetched, setGalleriesFetched] = useState(false);
   const _galleries = useSelector(galleriesSelector());
   const [images, setImages] = useState<string[]>(['']);
@@ -52,63 +52,30 @@ export default function Posts() {
     }
   }, [galleriesFetched, dispatch, _galleries]);
 
-  useEffect(() => {
-    if (search?.length === 0) {
-      setImages(['']);
-    }
-  }, [search]);
-
-  /**
-   * TODO: add logic to backend
-   */
   async function handleBlog(value: Gallery[]) {
     const posts = ((await dispatch(searchPostsByBlog(value[0].id))) as any)
       .payload as Post[];
 
-    const content = posts?.map((post: Post) => post.post);
-    let gallery: string[] = [];
-    let postArr: string[] = [];
-    let altTags: string[] = [];
-    let count: number[] = [];
+    const gallery = mapBlogImages(posts);
 
-    content?.forEach((post: Content) => {
-      if (post?.images[0]) {
-        gallery.push(...post.images);
-        post.images.forEach((item, index) => {
-          postArr.push(post.title);
-          if (postArr.includes(post.title)) {
-            count.push(index + 1);
-          } else {
-            count.push(1);
-          }
-        });
-      }
-
-      if (post?.images[0] && post?.altTags?.length) {
-        altTags.push(...post.altTags);
-      } else if (post?.images[0]) {
-        altTags.push('');
-      }
-    });
-
-    if (gallery[0]) {
-      setImages(gallery);
-      setTags(altTags);
-      setContent(postArr);
-      setImageNum(count);
+    if (gallery?.gallery) {
+      setImages(gallery.gallery);
+      setTags(gallery.altTags);
+      setContent(gallery.postArr);
+      setImageNum(gallery.count);
     }
   }
 
   const handleSearch = async ({ value }) => {
     setImages(['']);
+
     if (value[0]?.blog) {
       handleBlog(value);
     } else if (value[0]?.blog === false) {
-      alert('false');
+      alert(value[0]?.blog);
     }
 
     setSelectedGallery(value);
-    setSearch('');
   };
 
   return (

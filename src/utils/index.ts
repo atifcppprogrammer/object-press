@@ -1,4 +1,4 @@
-import { InputValidation } from 'types';
+import { Content, InputValidation, Post } from 'types';
 
 export const slugify = (text: string): string => {
   return text
@@ -163,5 +163,40 @@ export const validatePageTitle: InputValidation = (value) => {
   return {
     isValid,
     errorMessage,
+  };
+};
+
+export const mapBlogImages = (posts: Post[]) => {
+  const content = posts?.map((post: Post) => post.post);
+  let gallery: string[] = [];
+  let postArr: string[] = [];
+  let altTags: string[] = [];
+  let count: number[] = [];
+
+  content?.forEach((post: Content) => {
+    if (post?.images[0]) {
+      gallery.push(...post.images);
+      post.images.forEach((item, index) => {
+        postArr.push(post.title);
+        if (postArr.includes(post.title)) {
+          count.push(index + 1);
+        } else {
+          count.push(1);
+        }
+      });
+    }
+
+    if (post?.images[0] && post?.altTags[0]) {
+      altTags.push(...post.altTags);
+    } else if (post?.images[0]) {
+      altTags.push('');
+    }
+  });
+
+  return {
+    gallery,
+    altTags,
+    postArr,
+    count,
   };
 };

@@ -45,11 +45,12 @@ export const BLOGS_QUERY = gql`
 
 // get blogs
 export const GALLERIES_QUERY = gql`
-  query GetAllGalleries {
-    getAllGalleries {
+  query GetGalleryList {
+    getGalleryList {
       id
       name
       description
+      blog
     }
   }
 `;

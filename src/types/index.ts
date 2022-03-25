@@ -62,7 +62,7 @@ export interface GalleryList {
  * @type GalleryState
  */
 export type GalleryState = {
-  galleries: Gallery[];
+  galleries: Gallery[] | GalleryList[];
   loading: boolean;
   error?: string;
   fetched: boolean;

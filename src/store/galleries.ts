@@ -4,48 +4,26 @@ import {
   createSlice,
 } from '@reduxjs/toolkit';
 import { query } from '../graphql/client';
-import { BLOGS_QUERY, GALLERIES_QUERY } from '../graphql/queries';
-import { Blog, Gallery, GalleryState } from 'types';
+import { GALLERIES_QUERY } from '../graphql/queries';
+import { GalleryList, GalleryState } from 'types';
 import { RootState } from './index';
 
 /**
  * TODO: add logic to backend
  */
 export const fetchGalleries = createAsyncThunk<
-  Gallery[],
+  GalleryList[],
   undefined,
   { rejectValue: string }
 >('galleries/fetchGalleries', async (payload, { rejectWithValue }) => {
   try {
-    const blogs = await query<any, Blog[]>('getAllBlogs', BLOGS_QUERY, {});
-    const galleries = await query<any, Gallery[]>(
-      'getAllGalleries',
+    const galleries = await query<any, GalleryList[]>(
+      'getGalleryList',
       GALLERIES_QUERY,
       {}
     );
 
-    const blogNames = blogs.map((_) => {
-      return {
-        name: _.title,
-        id: _.id,
-        description: _.description,
-        blog: true,
-      };
-    });
-    const galleryNames = galleries.map((_) => {
-      return {
-        name: _.name,
-        id: _.id,
-        description: _.description,
-        blog: false,
-      };
-    });
-
-    let galleryList: Gallery[] = [...blogNames, ...galleryNames];
-
-    galleryList.sort((a, b) => a.name.localeCompare(b.name));
-
-    return galleryList;
+    return galleries;
   } catch (error) {
     rejectWithValue(error.message);
   }
