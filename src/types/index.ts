@@ -46,6 +46,16 @@ export interface Gallery {
   id: string;
   name: string;
   description: string;
+  images: string[];
+}
+
+/**
+ * @type GalleryList
+ */
+export interface GalleryList {
+  id: string;
+  name: string;
+  description: string;
   blog: boolean;
 }
 
@@ -61,7 +71,7 @@ export interface NewGallery {
  * @type GalleryState
  */
 export type GalleryState = {
-  galleries: Gallery[];
+  galleries: GalleryList[] | GalleryList | Gallery;
   loading: boolean;
   error?: string;
   fetched: boolean;

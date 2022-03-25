@@ -6,7 +6,7 @@ import { LoaderItem, Row, Col } from './Gallery.style';
 // redux
 import { useDispatch } from 'react-redux';
 import { searchPostsByBlog } from 'store/posts';
-import { Gallery, Post } from 'types';
+import { GalleryList, Post } from 'types';
 import { fetchGalleries } from 'store/galleries';
 import Fade from 'react-reveal/Fade';
 import ProductCard from 'components/ProductCard/ProductCard';
@@ -38,7 +38,7 @@ export default function Posts() {
   const dispatch = useDispatch();
   const [selectedGallery, setSelectedGallery] = useState([]);
   const [galleriesFetched, setGalleriesFetched] = useState(false);
-  const [galleries, setGalleries] = useState<Gallery[]>([]);
+  const [galleries, setGalleries] = useState<GalleryList[]>([]);
   const [images, setImages] = useState<string[]>(['']);
   const [content, setContent] = useState<string[]>(['']);
   const [tags, setTags] = useState<string[]>(['']);
@@ -47,7 +47,7 @@ export default function Posts() {
 
   async function getGalleries() {
     const galleryList = ((await dispatch(fetchGalleries())) as any)
-      .payload as Gallery[];
+      .payload as GalleryList[];
 
     setGalleries(galleryList);
 
@@ -61,7 +61,7 @@ export default function Posts() {
     // eslint-disable-next-line
   }, [galleriesFetched, isOpen]);
 
-  async function handleBlog(value: Gallery[]) {
+  async function handleBlog(value: GalleryList[]) {
     const posts = ((await dispatch(searchPostsByBlog(value[0].id))) as any)
       .payload as Post[];
 

@@ -5,17 +5,17 @@ import {
 } from '@reduxjs/toolkit';
 import { query, mutate } from '../graphql/client';
 import { GALLERIES_QUERY, GALLERY_QUERY } from '../graphql/queries';
-import { Gallery, GalleryState, NewGallery } from 'types';
+import { GalleryList, GalleryState, NewGallery } from 'types';
 import { RootState } from './index';
-import { GALLERY_MUTATION } from 'graphql/mutations';
+import { GALLERY_MUTATION, REMOVE_GALLERY_MUTATION } from 'graphql/mutations';
 
 export const fetchGalleries = createAsyncThunk<
-  Gallery[],
+  GalleryList[],
   undefined,
   { rejectValue: string }
 >('galleries/fetchGalleries', async (payload, { rejectWithValue }) => {
   try {
-    const galleries = await query<any, Gallery[]>(
+    const galleries = await query<any, GalleryList[]>(
       'getGalleryList',
       GALLERIES_QUERY,
       {}
@@ -27,26 +27,25 @@ export const fetchGalleries = createAsyncThunk<
   }
 });
 
-export const fetchGallery = createAsyncThunk<Gallery, string>(
-  'galleries/fetchGallery',
-  async (id) => {
-    try {
-      const gallery = await query<{ gallery: string }, Gallery>(
-        'getGallery',
-        GALLERY_QUERY,
-        {
-          gallery: id,
-        }
-      );
+export const fetchGallery = createAsyncThunk<
+  GalleryList,
+  string,
+  { rejectValue: string }
+>('galleries/fetchGallery', async (gallery, { rejectWithValue }) => {
+  try {
+    const galleryData = await query<{ gallery: string }, GalleryList>(
+      'getGallery',
+      GALLERY_QUERY,
+      {
+        gallery,
+      }
+    );
 
-      return gallery;
-    } catch (error) {
-      console.log(error);
-
-      return undefined;
-    }
+    return galleryData;
+  } catch (error) {
+    rejectWithValue(error.message);
   }
-);
+});
 
 export const createGallery = createAsyncThunk<
   void,
@@ -57,6 +56,24 @@ export const createGallery = createAsyncThunk<
     await mutate<{ gallery: NewGallery }, undefined>(
       'addGallery',
       GALLERY_MUTATION,
+      {
+        gallery,
+      }
+    );
+  } catch (error) {
+    rejectWithValue(error.message);
+  }
+});
+
+export const removeGallery = createAsyncThunk<
+  void,
+  string,
+  { rejectValue: string }
+>('galleries/removeGallery', async (gallery, { rejectWithValue }) => {
+  try {
+    await mutate<{ gallery: string }, undefined>(
+      'removeGallery',
+      REMOVE_GALLERY_MUTATION,
       {
         gallery,
       }
@@ -88,6 +105,19 @@ const galleriesSlice = createSlice({
       state.fetched = true;
     });
     builder.addCase(fetchGalleries.rejected, (state, { payload }) => {
+      state.error = payload;
+      state.loading = false;
+    });
+    builder.addCase(fetchGallery.pending, (state, { payload }) => {
+      state.error = undefined;
+      state.loading = true;
+    });
+    builder.addCase(fetchGallery.fulfilled, (state, { payload }) => {
+      state.galleries = payload;
+      state.loading = false;
+      state.fetched = true;
+    });
+    builder.addCase(fetchGallery.rejected, (state, { payload }) => {
       state.error = payload;
       state.loading = false;
     });

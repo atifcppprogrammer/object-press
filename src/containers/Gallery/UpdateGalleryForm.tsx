@@ -12,7 +12,12 @@ import {
   FieldDetails,
   ButtonGroup,
 } from '../DrawerItems/DrawerItems.style';
-import { Error, FormFields, FormLabel } from 'components/FormFields/FormFields';
+import {
+  Error,
+  FormFields,
+  FormLabel,
+  Message,
+} from 'components/FormFields/FormFields';
 import { useMutation } from '@apollo/client';
 import { UPDATE_GALLERY_MUTATION } from 'graphql/mutations';
 import useFormControl from '../../hooks/useFormControl';
@@ -20,8 +25,8 @@ import { validateDescription } from '../../utils/index';
 import { FormControl } from 'baseui/form-control';
 import { CloseDrawer } from 'containers/DrawerItems/DrawerItems';
 import { useDispatch } from 'react-redux';
-import { fetchGalleries, fetchGallery } from 'store/galleries';
-import { Gallery } from 'types';
+import { fetchGalleries, fetchGallery, removeGallery } from 'store/galleries';
+import { GalleryList } from 'types';
 import { CustomSelect } from 'components/Select/CustomSelect';
 
 interface Props {
@@ -30,15 +35,16 @@ interface Props {
 
 const UpdateGalleryForm: React.FC<Props> = ({ onClose }) => {
   const dispatch = useDispatch();
+  const [showConfirm, setShowConfirm] = useState<boolean>(false);
   const [selectedGallery, setSelectedGallery] = useState([]);
   const [galleriesFetched, setGalleriesFetched] = useState(false);
-  const [galleries, setGalleries] = useState<Gallery[]>([]);
+  const [galleries, setGalleries] = useState<GalleryList[]>([]);
   const [name, setName] = useState<string>('');
   const [updateGallery] = useMutation(UPDATE_GALLERY_MUTATION);
 
   async function getGalleries() {
     let galleryList = ((await dispatch(fetchGalleries())) as any)
-      .payload as Gallery[];
+      .payload as GalleryList[];
 
     galleryList = galleryList.filter((_) => !_.blog);
 
@@ -56,7 +62,7 @@ const UpdateGalleryForm: React.FC<Props> = ({ onClose }) => {
   useEffect(() => {
     async function fetchData(value: string) {
       let galleryList = ((await dispatch(fetchGallery(value))) as any)
-        .payload as Gallery;
+        .payload as GalleryList;
 
       setName(galleryList.name);
       setInitialDescription(galleryList.description);
@@ -102,7 +108,7 @@ const UpdateGalleryForm: React.FC<Props> = ({ onClose }) => {
       await updateGallery({
         variables: {
           gallery: {
-            galleryId: selectedGallery[0]?.id,
+            galleryId: selectedGallery[0].id,
             name: name,
             description: newDescription,
           },
@@ -111,6 +117,15 @@ const UpdateGalleryForm: React.FC<Props> = ({ onClose }) => {
 
       onClose();
     }
+  }
+
+  async function handleRemove() {
+    setShowConfirm(true);
+  }
+
+  async function deleteGallery() {
+    await dispatch(removeGallery(selectedGallery[0].id));
+    onClose();
   }
 
   return (
@@ -204,6 +219,66 @@ const UpdateGalleryForm: React.FC<Props> = ({ onClose }) => {
                         error={shouldNewDescriptionShowError}
                       />
                     </FormControl>
+                  </FormFields>
+
+                  <FormFields>
+                    <Message>This action cannot be undone</Message>
+
+                    {showConfirm ? (
+                      <Button
+                        kind={KIND.minimal}
+                        onClick={deleteGallery}
+                        type="button"
+                        overrides={{
+                          BaseButton: {
+                            style: ({ $theme }) => ({
+                              width: '50%',
+                              borderTopLeftRadius: '3px',
+                              borderTopRightRadius: '3px',
+                              borderBottomRightRadius: '3px',
+                              borderBottomLeftRadius: '3px',
+                              marginRight: '15px',
+                              color: $theme.colors.red400,
+                              marginLeft: 'auto',
+                              float: 'right',
+                            }),
+                          },
+                        }}
+                      >
+                        Confirm
+                        <i
+                          className="fas fa-trash"
+                          style={{ marginLeft: '15px', color: '#666D92' }}
+                        />
+                      </Button>
+                    ) : (
+                      <Button
+                        kind={KIND.minimal}
+                        onClick={handleRemove}
+                        type="button"
+                        overrides={{
+                          BaseButton: {
+                            style: ({ $theme }) => ({
+                              width: '50%',
+                              borderTopLeftRadius: '3px',
+                              borderTopRightRadius: '3px',
+                              borderBottomRightRadius: '3px',
+                              borderBottomLeftRadius: '3px',
+                              marginRight: '15px',
+                              color: $theme.colors.red400,
+                              marginLeft: 'auto',
+                              float: 'right',
+                            }),
+                          },
+                        }}
+                      >
+                        Remove
+                        <i
+                          className="fas fa-trash"
+                          style={{ marginLeft: '15px', color: '#666D92' }}
+                        />
+                      </Button>
+                    )}
                   </FormFields>
                 </DrawerBox>
               </Col>

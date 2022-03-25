@@ -102,6 +102,13 @@ export const UPDATE_GALLERY_MUTATION = gql`
   }
 `;
 
+// update gallery
+export const REMOVE_GALLERY_MUTATION = gql`
+  mutation RemoveGallery($gallery: String!) {
+    removeGallery(galleryId: $gallery)
+  }
+`;
+
 // upload image
 // export const UPLOAD_IMAGE_STREAM = gql`
 // mutation SingleUploadStream($file: Upload!) {
