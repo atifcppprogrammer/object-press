@@ -23,7 +23,9 @@ const apolloCache = new InMemoryCache({
 });
 
 const httpLink = createHttpLink({
-  uri: process.env.REACT_APP_API_URL,
+  uri: JSON.parse(process.env.REACT_APP_API_LOCAL)
+    ? `${process.env.REACT_APP_LOCAL_API}/graphql`
+    : process.env.REACT_APP_API_URL,
 });
 
 const authLink = setContext((_, { headers }) => {

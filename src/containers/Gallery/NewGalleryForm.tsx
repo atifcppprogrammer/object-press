@@ -59,7 +59,7 @@ const NewGalleryForm: React.FC<Props> = ({ onClose }: Props) => {
   return (
     <>
       <DrawerTitleWrapper>
-        <DrawerTitle>Add Post</DrawerTitle>
+        <DrawerTitle>Add Gallery</DrawerTitle>
       </DrawerTitleWrapper>
 
       <Form

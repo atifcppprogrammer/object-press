@@ -40,6 +40,35 @@ export interface Profile {
 }
 
 /**
+ * @type Gallery
+ */
+export interface Gallery {
+  id: string;
+  name: string;
+  description: string;
+  blog: boolean;
+}
+
+/**
+ * @type Gallery
+ */
+export interface GalleryList {
+  id: string;
+  name: string;
+  images: string[];
+}
+
+/**
+ * @type GalleryState
+ */
+export type GalleryState = {
+  galleries: Gallery[];
+  loading: boolean;
+  error?: string;
+  fetched: boolean;
+};
+
+/**
  * @type Blog
  */
 export interface Blog {

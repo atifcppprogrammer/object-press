@@ -7,8 +7,8 @@ import { LoaderItem, Row, Col } from './Gallery.style';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 import { searchPostsByBlog } from 'store/posts';
-import { Post } from 'types';
-import { blogsSelector, fetchBlogs } from 'store/blogs';
+import { Content, Gallery, Post } from 'types';
+import { galleriesSelector, fetchGalleries } from 'store/galleries';
 import Fade from 'react-reveal/Fade';
 import ProductCard from 'components/ProductCard/ProductCard';
 import Placeholder from 'components/Placeholder/Placeholder';
@@ -36,21 +36,21 @@ export default function Posts() {
   };
 
   const dispatch = useDispatch();
-  const [selectedBlog, setSelectedBlog] = useState([]);
+  const [selectedGallery, setSelectedGallery] = useState([]);
   const [search, setSearch] = useState('');
-  const [blogsFetched, setBlogsFetched] = useState(false);
-  const _blogs = useSelector(blogsSelector());
+  const [galleriesFetched, setGalleriesFetched] = useState(false);
+  const _galleries = useSelector(galleriesSelector());
   const [images, setImages] = useState<string[]>(['']);
   const [content, setContent] = useState<string[]>(['']);
   const [tags, setTags] = useState<string[]>(['']);
   const [imageNum, setImageNum] = useState<number[]>([]);
 
   useEffect(() => {
-    if (!_blogs?.length && !blogsFetched) {
-      setBlogsFetched(true);
-      dispatch(fetchBlogs());
+    if (!_galleries?.length && !galleriesFetched) {
+      setGalleriesFetched(true);
+      dispatch(fetchGalleries());
     }
-  }, [blogsFetched, dispatch, _blogs]);
+  }, [galleriesFetched, dispatch, _galleries]);
 
   useEffect(() => {
     if (search?.length === 0) {
@@ -58,93 +58,56 @@ export default function Posts() {
     }
   }, [search]);
 
-  //const handleSearch = async () => {
-  //  const value = search;
-  //  setImages(['']);
-  //
-  //  if (value && value.length >= 2) {
-  //    const posts = ((await dispatch(searchPosts(value))) as any)
-  //      .payload as Post[];
-  //
-  //    const content = posts?.map((post: any) => post.post);
-  //    let gallery: string[] = [];
-  //    let postArr: string[] = [];
-  //    let altTags: string[] = [];
-  //    let count: number[] = [];
-  //
-  //    content?.forEach((post) => {
-  //      if (post?.images[0]) {
-  //        gallery.push(...post.images);
-  //        post.images.forEach((item, index) => {
-  //          postArr.push(post.title);
-  //          if (postArr.includes(post.title)) {
-  //            count.push(index + 1);
-  //          } else {
-  //            count.push(1);
-  //          }
-  //        });
-  //      }
-  //
-  //      if (post?.images[0] && post?.altTags?.length) {
-  //        altTags.push(...post.altTags);
-  //      } else if (post?.images[0]) {
-  //        altTags.push('');
-  //      }
-  //    });
-  //
-  //    if (gallery[0]) {
-  //      setImages(gallery);
-  //      setTags(altTags);
-  //      setContent(postArr);
-  //      setImageNum(count);
-  //    }
-  //  }
-  //
-  //    setSearch(value);
-  //    setSelectedBlog([]);
-  //  };
+  /**
+   * TODO: add logic to backend
+   */
+  async function handleBlog(value: Gallery[]) {
+    const posts = ((await dispatch(searchPostsByBlog(value[0].id))) as any)
+      .payload as Post[];
 
-  const handleBlog = async ({ value }) => {
-    setImages(['']);
-    if (value.length) {
-      const posts = ((await dispatch(searchPostsByBlog(value[0].id))) as any)
-        .payload as Post[];
+    const content = posts?.map((post: Post) => post.post);
+    let gallery: string[] = [];
+    let postArr: string[] = [];
+    let altTags: string[] = [];
+    let count: number[] = [];
 
-      const content = posts?.map((post: any) => post.post);
-      let gallery: string[] = [];
-      let postArr: string[] = [];
-      let altTags: string[] = [];
-      let count: number[] = [];
-
-      content?.forEach((post) => {
-        if (post?.images[0]) {
-          gallery.push(...post.images);
-          post.images.forEach((item, index) => {
-            postArr.push(post.title);
-            if (postArr.includes(post.title)) {
-              count.push(index + 1);
-            } else {
-              count.push(1);
-            }
-          });
-        }
-
-        if (post?.images[0] && post?.altTags?.length) {
-          altTags.push(...post.altTags);
-        } else if (post?.images[0]) {
-          altTags.push('');
-        }
-      });
-
-      if (gallery[0]) {
-        setImages(gallery);
-        setTags(altTags);
-        setContent(postArr);
-        setImageNum(count);
+    content?.forEach((post: Content) => {
+      if (post?.images[0]) {
+        gallery.push(...post.images);
+        post.images.forEach((item, index) => {
+          postArr.push(post.title);
+          if (postArr.includes(post.title)) {
+            count.push(index + 1);
+          } else {
+            count.push(1);
+          }
+        });
       }
+
+      if (post?.images[0] && post?.altTags?.length) {
+        altTags.push(...post.altTags);
+      } else if (post?.images[0]) {
+        altTags.push('');
+      }
+    });
+
+    if (gallery[0]) {
+      setImages(gallery);
+      setTags(altTags);
+      setContent(postArr);
+      setImageNum(count);
+    }
+  }
+
+  const handleSearch = async ({ value }) => {
+    setImages(['']);
+    if (value[0]?.blog) {
+      handleBlog(value);
+    } else if (value[0]?.blog === false) {
+      alert('false');
     }
 
-    setSelectedBlog(value);
+    setSelectedGallery(value);
     setSearch('');
   };
 
@@ -162,13 +125,13 @@ export default function Posts() {
               <Row>
                 <Col md={2} lg={2}>
                   <Select
-                    options={_blogs}
-                    labelKey="title"
+                    options={_galleries}
+                    labelKey="name"
                     valueKey="id"
                     placeholder="Gallery"
-                    value={selectedBlog}
+                    value={selectedGallery}
                     searchable={false}
-                    onChange={handleBlog}
+                    onChange={handleSearch}
                   />
                 </Col>
 
@@ -176,7 +139,7 @@ export default function Posts() {
                   <Button
                     onClick={openDrawer}
                     startEnhancer={() => (
-                      <i className="fas fa-plus" aria-label="new gallery"></i>
+                      <i className="fas fa-plus" aria-label="new blog" />
                     )}
                     overrides={{
                       BaseButton: {
@@ -198,7 +161,7 @@ export default function Posts() {
                   <Button
                     onClick={handleUpdate}
                     startEnhancer={() => (
-                      <i className="fa fa-camera" aria-label="add image"></i>
+                      <i className="fas fa-edit" aria-label="edit blog" />
                     )}
                     overrides={{
                       BaseButton: {
@@ -213,7 +176,7 @@ export default function Posts() {
                       },
                     }}
                   >
-                    Add
+                    Update
                   </Button>
                 </Col>
 
@@ -221,25 +184,22 @@ export default function Posts() {
                   <Button
                     onClick={handleUpdate}
                     startEnhancer={() => (
-                      <i
-                        className="fa fa-trash"
-                        aria-label="delete gallery"
-                      ></i>
+                      <i className="fas fa-camera" aria-label="build hook" />
                     )}
                     overrides={{
                       BaseButton: {
-                        style: ({ $theme }) => ({
+                        style: () => ({
                           width: '100%',
                           borderTopLeftRadius: '3px',
                           borderTopRightRadius: '3px',
                           borderBottomLeftRadius: '3px',
                           borderBottomRightRadius: '3px',
-                          backgroundColor: $theme.colors.red400,
+                          backgroundColor: '#00d4b5',
                         }),
                       },
                     }}
                   >
-                    Remove
+                    Add
                   </Button>
                 </Col>
               </Row>

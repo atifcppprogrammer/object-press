@@ -43,6 +43,17 @@ export const BLOGS_QUERY = gql`
   }
 `;
 
+// get blogs
+export const GALLERIES_QUERY = gql`
+  query GetAllGalleries {
+    getAllGalleries {
+      id
+      name
+      description
+    }
+  }
+`;
+
 // get blog
 export const GET_BLOG_QUERY = gql`
   query GetBlogs($blog: String!) {
