@@ -158,12 +158,12 @@ const UpdateGalleryForm: React.FC<Props> = ({ onClose }) => {
             <Col lg={8}>
               <DrawerBox>
                 <FormFields>
-                  <FormLabel>Blog</FormLabel>
+                  <FormLabel>Gallery</FormLabel>
                   <CustomSelect
                     options={galleries}
                     labelKey="name"
                     valueKey="id"
-                    placeholder="Blog Title"
+                    placeholder="Gallery Name"
                     value={selectedGallery}
                     onChange={handleSearch}
                     searchable={false}
@@ -177,7 +177,7 @@ const UpdateGalleryForm: React.FC<Props> = ({ onClose }) => {
             <Row>
               <Col lg={4}>
                 <FieldDetails>
-                  Update your blog description and necessary information here
+                  Update your gallery description and necessary information here
                 </FieldDetails>
               </Col>
 
@@ -222,7 +222,15 @@ const UpdateGalleryForm: React.FC<Props> = ({ onClose }) => {
                   </FormFields>
 
                   <FormFields>
-                    <Message>This action cannot be undone</Message>
+                    <Message>
+                      <i
+                        className="fas fa-exclamation-triangle"
+                        style={{ marginRight: '5px', color: '#666D92' }}
+                      />
+                      This action cannot be undone and
+                      <br />
+                      all images will be removed from this gallery
+                    </Message>
 
                     {showConfirm ? (
                       <Button
@@ -247,7 +255,7 @@ const UpdateGalleryForm: React.FC<Props> = ({ onClose }) => {
                       >
                         Confirm
                         <i
-                          className="fas fa-trash"
+                          className="fas fa-exclamation-triangle"
                           style={{ marginLeft: '15px', color: '#666D92' }}
                         />
                       </Button>
