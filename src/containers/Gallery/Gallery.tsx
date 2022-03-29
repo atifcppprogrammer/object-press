@@ -82,11 +82,11 @@ export default function Posts() {
         setContent(postArr);
         setImageNum(count);
       }
+      setIsLoading(false);
     }
 
     setSearch(value);
     setSelectedBlog([]);
-    setIsLoading(false);
   };
 
   const handleBlog = async ({ value }) => {
@@ -128,13 +128,12 @@ export default function Posts() {
         setContent(postArr);
         setImageNum(count);
       }
+      setIsLoading(false);
     }
 
     setSelectedBlog(value);
     setSearch('');
-    setIsLoading(false);
   };
-  console.log(images);
 
   return (
     <Grid fluid={true}>
@@ -203,79 +202,59 @@ export default function Posts() {
               </Row>
             </Col>
           </Header>
+
           {!isLoading && images.length === 0 && <NoResult hideButton={false} />}
+
           <Row>
-            {images[0] && !isLoading
-              ? images.map((image: string, index: number) => {
-                  return (
-                    <Col
-                      md={4}
-                      lg={3}
-                      sm={6}
-                      xs={12}
-                      key={index}
-                      style={{ margin: '15px 0' }}
-                    >
-                      <Fade bottom duration={800} delay={index * 10}>
-                        <ProductCard
-                          title={content[index]}
-                          tag={tags[index]}
-                          image={image}
-                          index={imageNum[index]}
-                          data={image}
-                        />
-                      </Fade>
-                    </Col>
-                  );
-                })
-              : isLoading && (
-                  <>
-                    <Col
-                      md={4}
-                      lg={3}
-                      sm={6}
-                      xs={12}
-                      style={{ margin: '15px 0' }}
-                    >
-                      <LoaderItem>
-                        <Placeholder />
-                      </LoaderItem>
-                    </Col>
-                    <Col
-                      md={4}
-                      lg={3}
-                      sm={6}
-                      xs={12}
-                      style={{ margin: '15px 0' }}
-                    >
-                      <LoaderItem>
-                        <Placeholder />
-                      </LoaderItem>
-                    </Col>
-                    <Col
-                      md={4}
-                      lg={3}
-                      sm={6}
-                      xs={12}
-                      style={{ margin: '15px 0' }}
-                    >
-                      <LoaderItem>
-                        <Placeholder />
-                      </LoaderItem>
-                    </Col>
-                    <Col
-                      md={4}
-                      lg={3}
-                      sm={6}
-                      xs={12}
-                      style={{ margin: '15px 0' }}
-                    >
-                      <LoaderItem>
-                        <Placeholder />
-                      </LoaderItem>
-                    </Col>
-                  </>
-                )}
+            {!isLoading &&
+              images[0] &&
+              images.map((image: string, index: number) => {
+                return (
+                  <Col
+                    md={4}
+                    lg={3}
+                    sm={6}
+                    xs={12}
+                    key={index}
+                    style={{ margin: '15px 0' }}
+                  >
+                    <Fade bottom duration={800} delay={index * 10}>
+                      <ProductCard
+                        title={content[index]}
+                        tag={tags[index]}
+                        image={image}
+                        index={imageNum[index]}
+                        data={image}
+                      />
+                    </Fade>
+                  </Col>
+                );
+              })}
+
+            {isLoading && (
+              <>
+                <Col md={4} lg={3} sm={6} xs={12} style={{ margin: '15px 0' }}>
+                  <LoaderItem>
+                    <Placeholder />
+                  </LoaderItem>
+                </Col>
+                <Col md={4} lg={3} sm={6} xs={12} style={{ margin: '15px 0' }}>
+                  <LoaderItem>
+                    <Placeholder />
+                  </LoaderItem>
+                </Col>
+                <Col md={4} lg={3} sm={6} xs={12} style={{ margin: '15px 0' }}>
+                  <LoaderItem>
+                    <Placeholder />
+                  </LoaderItem>
+                </Col>
+                <Col md={4} lg={3} sm={6} xs={12} style={{ margin: '15px 0' }}>
+                  <LoaderItem>
+                    <Placeholder />
+                  </LoaderItem>
+                </Col>
+              </>
+            )}
           </Row>
         </Col>
       </Row>
