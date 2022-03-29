@@ -1,3 +1,5 @@
+import React from 'react';
+
 /**
  * @type AuthProps
  */
@@ -91,6 +93,7 @@ export interface Content {
   keywords: string;
   description: string;
   images: string[];
+  imageSrc: string[];
   altTags: string[];
 }
 

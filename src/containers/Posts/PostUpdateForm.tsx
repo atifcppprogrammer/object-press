@@ -58,6 +58,7 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
   const [blogId, setBlogId] = useState([]);
   const [keywords, setKeywords] = useState('');
   const [images, setImages] = useState<string[]>(['']);
+  const [imageSrc, setImageSrc] = useState<string[]>(['']);
   const [publishDate, setPublishDate] = useState<any>(new Date());
 
   const dispatch = useDispatch();
@@ -93,6 +94,7 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
         description,
         keywords,
         images,
+        imageSrc,
         altTags,
       } = post.post;
 
@@ -106,6 +108,7 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
       setKeywords(keywords);
       setBlogId(blogs.filter((b) => b.id === post.appId));
       setImages(images);
+      setImageSrc(imageSrc);
       setAltTags(altTags);
     }
   };
@@ -211,6 +214,7 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                 keywords,
                 description: newDescription,
                 images: images?.length ? images : [''],
+                imageSrc: imageSrc?.length ? imageSrc : [''],
                 altTags: altTags?.length ? altTags : [''],
               },
               active: active[0].value,
@@ -232,7 +236,6 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
   };
 
   const handleKeywordChange = (value: string) => {
-    console.log(value);
     setKeywords(value);
   };
 

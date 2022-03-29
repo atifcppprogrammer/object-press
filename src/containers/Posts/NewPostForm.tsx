@@ -164,7 +164,8 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
 
     setLoading(true);
 
-    const imageUrls: string[] = [];
+    const images: string[] = [];
+    const imageSrc: string[] = [];
     const stamp = Date.now();
 
     if (isFormValid) {
@@ -178,8 +179,10 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
           // Send this form data to a Rest API
           await addNewImage(formData);
 
+          images.push(file.name);
+
           let path = `https://share.objectpress.io/${name}`;
-          imageUrls.push(path);
+          imageSrc.push(path);
         }
 
         await dispatch(
@@ -194,7 +197,8 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                 slug: slugify(pageTitle),
                 keywords,
                 description: description,
-                images: imageUrls?.length ? imageUrls : [''],
+                images: images?.length ? images : [''],
+                imageSrc: imageSrc?.length ? imageSrc : [''],
                 altTags,
               },
               active: active[0].value,
