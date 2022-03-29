@@ -1,3 +1,5 @@
+import { InputValidation } from 'types';
+
 export const slugify = (text: string): string => {
   return text
     .toString()
@@ -23,21 +25,14 @@ export const isLength = (value: string, length: number): boolean => {
   return validLength;
 };
 
-export interface InputValidation {
-  (value: string): {
-    isValid: boolean;
-    errorMessage: string | null;
-  };
-}
-
 export const validateBlogName: InputValidation = (value) => {
-  let isValid: boolean = isLength(slugify(value), 1);
+  let isValid: boolean = isLength(value, 1);
   let errorMessage: string | null = null;
 
   if (isValid) {
     errorMessage = null;
   } else {
-    errorMessage = 'Blog Name should not be empty.';
+    errorMessage = 'Blog Name should not be empty';
   }
 
   return {
@@ -53,11 +48,7 @@ export const validateBuildHook: InputValidation = (value) => {
   let errorMessage: string | null = null;
 
   if (!isValueUrlFormat) {
-    errorMessage = 'Build Hook should be a valid URL.';
-  }
-
-  if (!isValueNotEmpty) {
-    errorMessage = 'Build Hook should not be empty.';
+    errorMessage = 'Build Hook should be a valid URL';
   }
 
   if (isValid) {
@@ -71,13 +62,13 @@ export const validateBuildHook: InputValidation = (value) => {
 };
 
 export const validateDescription: InputValidation = (value) => {
-  let isValid: boolean = isLength(slugify(value), 10);
+  let isValid: boolean = isLength(value, 10);
   let errorMessage: string | null = null;
 
   if (isValid) {
     errorMessage = null;
   } else {
-    errorMessage = 'Description should have at least 10 characters.';
+    errorMessage = 'Description should have at least 10 characters';
   }
 
   return {
@@ -87,7 +78,7 @@ export const validateDescription: InputValidation = (value) => {
 };
 
 export const validateUsername: InputValidation = (value) => {
-  let isValid: boolean = isLength(slugify(value), 1);
+  let isValid: boolean = isLength(value, 1);
   let errorMessage: string | null = null;
 
   isValid
@@ -100,7 +91,7 @@ export const validateUsername: InputValidation = (value) => {
 };
 
 export const validateFirstName: InputValidation = (value) => {
-  let isValid: boolean = isLength(slugify(value), 1);
+  let isValid: boolean = isLength(value, 1);
   let errorMessage: string | null = null;
 
   isValid
@@ -113,7 +104,7 @@ export const validateFirstName: InputValidation = (value) => {
 };
 
 export const validateLastName: InputValidation = (value) => {
-  let isValid: boolean = isLength(slugify(value), 1);
+  let isValid: boolean = isLength(value, 1);
   let errorMessage: string | null = null;
 
   isValid
@@ -132,11 +123,11 @@ export const validateWebsite: InputValidation = (value) => {
   let errorMessage: string | null = null;
 
   if (!isValueUrlFormat) {
-    errorMessage = 'Website should be a valid URL.';
+    errorMessage = 'Website should be a valid URL';
   }
 
   if (!isValueNotEmpty) {
-    errorMessage = 'Website should not be empty.';
+    errorMessage = 'Website should not be empty';
   }
 
   if (isValid) {
@@ -150,7 +141,7 @@ export const validateWebsite: InputValidation = (value) => {
 };
 
 export const validatePostTitle: InputValidation = (value) => {
-  let isValid: boolean = isLength(slugify(value), 1);
+  let isValid: boolean = isLength(value, 1);
   let errorMessage: string | null = null;
 
   isValid
@@ -163,7 +154,7 @@ export const validatePostTitle: InputValidation = (value) => {
 };
 
 export const validatePageTitle: InputValidation = (value) => {
-  let isValid: boolean = isLength(slugify(value), 1);
+  let isValid: boolean = isLength(value, 1);
   let errorMessage: string | null = null;
 
   isValid

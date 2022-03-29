@@ -16,9 +16,16 @@ const Label = styled('label', ({ $theme }) => ({
   color: $theme.colors.textDark,
 }));
 
-const Msg = styled('span', ({ $theme }) => ({
-  ...$theme.typography.fontBold12,
+const ErrorMsg = styled('span', ({ $theme }) => ({
+  fontSize: '12px',
   color: $theme.colors.red400,
+  marginTop: '5px',
+  marginRight: 'auto',
+}));
+
+const Msg = styled('span', ({ $theme }) => ({
+  color: 'rgb(84,84,84)',
+  fontSize: '12px',
   marginTop: '5px',
   marginRight: 'auto',
 }));
@@ -63,5 +70,9 @@ export const FormTitle = ({ children }) => {
 };
 
 export const Error = ({ children }) => {
+  return <ErrorMsg>{children}</ErrorMsg>;
+};
+
+export const Message = ({ children }) => {
   return <Msg>{children}</Msg>;
 };

@@ -155,10 +155,34 @@ export interface Notify {
 }
 
 /**
- * @type Notify
+ * @type NotifyState
  */
 export type NotifyState = {
   notifications: Notify[];
   loading: boolean;
   error?: string;
 };
+
+/**
+ * @type InputValidation
+ */
+export interface InputValidation {
+  (value: string): {
+    isValid: boolean;
+    errorMessage: string | null;
+  };
+}
+
+/**
+ * @type FormControlHook
+ */
+export interface FormControlHook {
+  (validationFunction: InputValidation): {
+    value: string;
+    isValid: boolean;
+    onInputChangeHandler: (e: React.FormEvent<Element>) => void;
+    onInputBlurHandler: () => void;
+    shouldShowError: boolean;
+    setInitialValue: (initialValue: string) => void;
+  };
+}

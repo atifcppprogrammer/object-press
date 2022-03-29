@@ -67,33 +67,6 @@ const ProfileForm: React.FC<Props> = ({ onClose }) => {
     }
   }, [getUserInfo, loading, data, isOpen]);
 
-  async function onSubmit(event) {
-    event.preventDefault();
-
-    await update({
-      variables: {
-        user: {
-          username: newUsername,
-          firstName: newFirstName,
-          lastName: newLastName,
-          company: company,
-          title: title,
-          country: country,
-          website: newWebsite,
-          notify: checked,
-        },
-      },
-    })
-      .then(() => {
-        getUserInfo();
-      })
-      .catch((err) => console.log(err));
-
-    onClose();
-  }
-
-  ////////////////////////////
-
   const {
     value: newUsername,
     isValid: newUsernameIsValid,
@@ -127,8 +100,6 @@ const ProfileForm: React.FC<Props> = ({ onClose }) => {
     setInitialValue: setInitialWebsite,
   } = useFormControl(validateWebsite);
 
-  ////////////////////////////
-
   useEffect(() => {
     setInitialUsername(username);
     setInitialFirstName(firstName);
@@ -150,6 +121,33 @@ const ProfileForm: React.FC<Props> = ({ onClose }) => {
     newFirstNameIsValid &&
     newLastNameIsValid &&
     newWebsiteIsValid;
+
+  async function onSubmit(event) {
+    event.preventDefault();
+
+    if (isFormValid) {
+      await update({
+        variables: {
+          user: {
+            username: newUsername,
+            firstName: newFirstName,
+            lastName: newLastName,
+            company: company,
+            title: title,
+            country: country,
+            website: newWebsite,
+            notify: checked,
+          },
+        },
+      })
+        .then(() => {
+          getUserInfo();
+        })
+        .catch((err) => console.log(err));
+
+      onClose();
+    }
+  }
 
   return (
     <>
