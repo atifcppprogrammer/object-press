@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useDrawerDispatch } from 'context/DrawerContext';
-import Uploader from 'components/Uploader/Uploader';
 import Button, { KIND } from 'components/Button/Button';
 import DrawerBox from 'components/DrawerBox/DrawerBox';
 import { Row, Col } from 'components/FlexBox/FlexBox';
@@ -53,8 +52,8 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
   const [content, setContent] = useState<string>('');
   const [isMdEditorVisited, setIsMdEditorVisited] = useState<boolean>(false);
   const [active, setActive] = useState([]);
-  const [uploads, setUploads] = useState<File[]>([]);
-  const [altTags, setAltTags] = useState<string[]>(['']);
+  const [uploads] = useState<File[]>([]);
+  const [altTags] = useState<string[]>(['']);
   const [loading, setLoading] = useState(false);
   const [blogId, setBlogId] = useState([]);
   const [keywords, setKeywords] = useState('');
@@ -71,7 +70,7 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
       type: 'OPEN_DRAWER',
       drawerComponent: 'MANAGE_IMAGES',
       backUrl: '/posts',
-      newUrl: '/manage-images',
+      newUrl: '/manage-post-images',
     });
   }, [drawerDispatch]);
 
@@ -81,45 +80,6 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
       dispatch(fetchBlogs());
     }
   }, [dispatch, blogs, blogsFetched]);
-
-  function onTagChange(value, index: number) {
-    if (altTags?.length) {
-      const newTags = [...altTags];
-
-      newTags[index] = value;
-
-      setAltTags(newTags);
-    } else {
-      setAltTags(value);
-    }
-  }
-
-  const tags = () => {
-    return uploads[0] ? (
-      uploads?.map((upload, index) => {
-        return (
-          <FormFields key={index}>
-            <FormLabel>Image Alt Tag {index + 1}</FormLabel>
-            <Input
-              type="text"
-              name={`tag${index + 1}`}
-              onChange={(e) => onTagChange(e.target.value, index)}
-            />
-          </FormFields>
-        );
-      })
-    ) : (
-      <FormFields>
-        <FormLabel>Image Alt Tags</FormLabel>
-        <Input
-          type="text"
-          name="image alt tags"
-          value="You haven't uploaded any images."
-          readOnly
-        />
-      </FormFields>
-    );
-  };
 
   const {
     value: postTitle,
@@ -210,14 +170,6 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
     setLoading(false);
   };
 
-  const onUpload = (files: File[]) => {
-    const file = files[0];
-
-    if (uploads?.length < 5) {
-      setUploads([...uploads, file]);
-    }
-  };
-
   const handleActiveChange = ({ value }) => {
     setActive(value);
   };
@@ -279,6 +231,33 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                     onChange={handleBlogChange}
                   />
                 </FormFields>
+              </DrawerBox>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col lg={4}>
+              <FieldDetails>Manage Post images</FieldDetails>
+            </Col>
+            <Col lg={8}>
+              <DrawerBox>
+                <Button
+                  type="button"
+                  overrides={{
+                    BaseButton: {
+                      style: () => ({
+                        width: '100%',
+                        borderTopLeftRadius: '3px',
+                        borderTopRightRadius: '3px',
+                        borderBottomRightRadius: '3px',
+                        borderBottomLeftRadius: '3px',
+                      }),
+                    },
+                  }}
+                  onClick={openDrawer}
+                >
+                  Post Images
+                </Button>
               </DrawerBox>
             </Col>
           </Row>
@@ -405,39 +384,6 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
             </Col>
           </Row>
 
-          <Row>
-            <Col lg={4}>
-              <FieldDetails>Upload your post images here</FieldDetails>
-            </Col>
-            <Col lg={8}>
-              <DrawerBox
-                overrides={{
-                  Block: {
-                    style: {
-                      width: '100%',
-                      height: 'auto',
-                      padding: '30px',
-                      borderRadius: '3px',
-                      backgroundColor: '#ffffff',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.3)',
-                    },
-                  },
-                }}
-              >
-                <Uploader onChange={onUpload} />
-              </DrawerBox>
-            </Col>
-
-            <Col lg={4}>
-              <FieldDetails>Add your image alt tags here</FieldDetails>
-            </Col>
-            <Col lg={8}>
-              <DrawerBox>{tags()}</DrawerBox>
-            </Col>
-          </Row>
         </Scrollbars>
 
         <ButtonGroup>

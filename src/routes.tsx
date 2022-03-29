@@ -65,6 +65,20 @@ const Routes = () => {
             </Suspense>
           </AdminLayout>
         </PrivateRoute>
+        <PrivateRoute path="/manage-post-images">
+          <AdminLayout>
+            <Suspense fallback={<InLineLoader />}>
+              <Posts />
+            </Suspense>
+          </AdminLayout>
+        </PrivateRoute>
+        <PrivateRoute path="/manage-post-images/:id">
+          <AdminLayout>
+            <Suspense fallback={<InLineLoader />}>
+              <Posts />
+            </Suspense>
+          </AdminLayout>
+        </PrivateRoute>
         <PrivateRoute path="/new-post">
           <AdminLayout>
             <Suspense fallback={<InLineLoader />}>

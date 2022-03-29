@@ -1,7 +1,15 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import { useCallback, FC } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { styled } from 'baseui';
 import { UploadIcon } from 'assets/icons/UploadIcon';
+
+interface Props {
+  files: File[];
+  onUpload: (files: File[]) => void;
+  onRemove: (index: number) => void;
+  multiple?: boolean;
+  max?: number;
+}
 
 const Text = styled('span', ({ $theme }) => ({
   ...$theme.typography.font14,
@@ -52,11 +60,36 @@ const Thumb = styled('div', ({ $theme }) => ({
   boxSizing: 'border-box',
   justifyContent: 'center',
   overflow: 'hidden',
+  position: 'relative',
+  transition: $theme.animation.timing200,
+  cursor: 'pointer',
+
+  ':hover': {
+    '::after': {
+      visibility: 'visible',
+    },
+  },
+
+  '::after': {
+    visibility: 'hidden',
+    content: `'x'`,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    color: 'white',
+    fontSize: '20px',
+  },
 }));
 
-const thumbInner = {
+const ThumbInner = styled('div', ({ $theme, $hovered }) => ({
   display: 'flex',
-};
+  transition: $theme.animation.timing200,
+
+  ':hover': {
+    filter: 'brightness(0.5)',
+  },
+}));
 
 const img = {
   display: 'block',
@@ -64,76 +97,50 @@ const img = {
   height: 'auto',
 };
 
-function Uploader({ onChange, imageURL, uploads }: any) {
-  const [files, setFiles] = useState<any>(
-    imageURL ? [{ name: 'demo', preview: imageURL }] : []
-  );
+const Uploader: FC<Props> = ({
+  files,
+  onUpload,
+  onRemove,
+  multiple = false,
+  max = 5,
+}) => {
   const { getRootProps, getInputProps } = useDropzone({
     accept: 'image/*',
-    multiple: false,
+    multiple,
     onDrop: useCallback(
       (acceptedFiles) => {
-        if (files.length < 5) {
-          setFiles([
-            ...files,
-            acceptedFiles.map((file) =>
-              Object.assign(file, {
-                preview: URL.createObjectURL(file),
-              })
-            ),
-          ]);
-          onChange(acceptedFiles);
-        }
-
-        if (files[0] === []) {
-          files.pop();
+        if (files.length < max) {
+          onUpload(acceptedFiles);
         }
       },
-
-      [files, onChange]
+      [onUpload, files, max]
     ),
   });
 
-  useEffect(
-    () => () => {
-      // Make sure to revoke the data uris to avoid memory leaks
-      files.forEach((file) => URL.revokeObjectURL(file.preview));
-    },
-    [files]
-  );
-
   return (
     <section className="container uploader">
-      {!uploads && (
-        <Container {...getRootProps()}>
-          <input {...getInputProps()} />
-          <UploadIcon />
-          <Text>
-            <TextHighlighted>Drag/Upload</TextHighlighted> your images here.
-          </Text>
-        </Container>
-      )}
+      <Container {...getRootProps()}>
+        <input {...getInputProps()} />
+        <UploadIcon />
+        <Text>
+          <TextHighlighted>Drag/Upload</TextHighlighted> your images here.
+        </Text>
+      </Container>
       <ThumbsContainer>
-        {uploads
-          ? uploads.map((upload) => (
-              <Thumb key={upload}>
-                <div style={thumbInner}>
-                  <img src={upload} style={img} alt={upload} />
-                </div>
-              </Thumb>
-            ))
-          : files.map((file) =>
-              file.map((upload) => (
-                <Thumb key={upload.name}>
-                  <div style={thumbInner}>
-                    <img src={upload.preview} style={img} alt={upload.name} />
-                  </div>
-                </Thumb>
-              ))
-            )}
+        {files.map((file, index) => {
+          const url = URL.createObjectURL(file);
+
+          return (
+            <Thumb key={index} onClick={() => onRemove(index)}>
+              <ThumbInner>
+                <img src={url} style={img} alt={file.name} />
+              </ThumbInner>
+            </Thumb>
+          );
+        })}
       </ThumbsContainer>
     </section>
   );
-}
+};
 
 export default Uploader;
