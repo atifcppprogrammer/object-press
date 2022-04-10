@@ -1,4 +1,4 @@
-import React, { useContext, lazy, Suspense } from 'react';
+import { useContext, lazy, Suspense } from 'react';
 import { Helmet } from 'react-helmet';
 import { Route, Switch, Redirect, useLocation } from 'react-router-dom';
 import AuthProvider, { AuthContext } from 'context/auth';
