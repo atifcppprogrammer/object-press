@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import {
   AmplifyAuthenticator,
@@ -87,7 +87,13 @@ export default function Login() {
       <Topbar />
       <main style={{ background: '#f7faff' }}>
         <section className="relative w-full h-full py-40 min-h-screen">
-          <AmplifyAuthenticator usernameAlias="email">
+          <AmplifyAuthenticator
+            usernameAlias="email"
+            federated={{
+              googleClientId:
+                '1035201445904-5p974ebq7aasf411ammemut36m7vf5bb.apps.googleusercontent.com',
+            }}
+          >
             <AmplifySignUp
               slot="sign-up"
               usernameAlias="email"
@@ -112,7 +118,15 @@ export default function Login() {
                 },
               ]}
             />
-            <AmplifySignIn slot="sign-in" usernameAlias="email" />
+            <AmplifySignIn
+              slot="sign-in"
+              usernameAlias="email"
+              federated-buttons={true}
+              federated={{
+                googleClientId:
+                  '1035201445904-5p974ebq7aasf411ammemut36m7vf5bb.apps.googleusercontent.com',
+              }}
+            />
           </AmplifyAuthenticator>
         </section>
       </main>
