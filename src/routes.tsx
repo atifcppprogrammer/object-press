@@ -62,11 +62,6 @@ const Routes = () => {
               <Posts />
             </AdminLayout>
           </PrivateRoute>
-          <PrivateRoute path="/manage-post-images/:id">
-            <AdminLayout>
-              <Posts />
-            </AdminLayout>
-          </PrivateRoute>
           <PrivateRoute path="/new-post">
             <AdminLayout>
               <Posts />

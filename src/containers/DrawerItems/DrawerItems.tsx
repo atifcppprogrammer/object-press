@@ -12,7 +12,6 @@ import Sidebar from '../Layout/Sidebar/Sidebar';
 import ProfileForm from 'containers/Settings/ProfileForm';
 import PostUpdateForm from 'containers/Posts/PostUpdateForm';
 import CredsForm from 'containers/Settings/CredsForm';
-import ManageImages from 'containers/ManageImages/MangeImages';
 import { CloseButton } from './DrawerItems.style';
 
 export type CloseDrawer = () => void;
@@ -25,7 +24,6 @@ const DRAWER_COMPONENTS = {
   PROFILE_FORM: ProfileForm,
   CREDS_FORM: CredsForm,
   SIDEBAR: Sidebar,
-  MANAGE_IMAGES: ManageImages,
 };
 
 export default function DrawerItems() {
@@ -100,7 +98,7 @@ export default function DrawerItems() {
         },
       }}
     >
-      <SpecificContent onClose={closeDrawer} data={data[data.length - 1]} />
+      <SpecificContent onClose={closeDrawer} data={data} />
     </Drawer>
   );
 }

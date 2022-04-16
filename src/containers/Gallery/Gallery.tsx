@@ -3,15 +3,17 @@ import Select from 'components/Select/Select';
 import Input from 'components/Input/Input';
 import { Header, Heading } from 'components/Wrapper.style';
 import { Grid } from 'components/FlexBox/FlexBox';
-import { Row, Col } from './Gallery.style';
+import { LoaderItem, Row, Col } from './Gallery.style';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 import { searchPosts, searchPostsByBlog } from 'store/posts';
 import { Post } from 'types';
 import { blogsSelector, fetchBlogs } from 'store/blogs';
+import Fade from 'react-reveal/Fade';
+import ProductCard from 'components/ProductCard/ProductCard';
+import Placeholder from 'components/Placeholder/Placeholder';
 import StickerLabel from 'components/Widgets/StickerCard/StickerLabel';
 import NoResult from '../../components/NoResult/NoResult';
-import { ImageGrid } from 'components/ImageGrid/ImageGrid';
 
 export default function Posts() {
   const [selectedBlog, setSelectedBlog] = useState([]);
@@ -22,6 +24,7 @@ export default function Posts() {
   const [images, setImages] = useState<string[]>([]);
   const [content, setContent] = useState<string[]>(['']);
   const [tags, setTags] = useState<string[]>(['']);
+  const [imageNum, setImageNum] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -34,44 +37,9 @@ export default function Posts() {
   useEffect(() => {
     if (search?.length === 0) {
       setImages([]);
-      setIsLoading(false);
+      setIsLoading(true);
     }
   }, [search]);
-
-  const _fetchImages = async (posts: Post[]) => {
-    const content = posts?.map((post: any) => post.post);
-    let gallery: string[] = [];
-    let postArr: string[] = [];
-    let altTags: string[] = [];
-    let count: number[] = [];
-
-    content?.forEach((post) => {
-      if (post?.images[0]) {
-        gallery.push(...post.images);
-        post.images.forEach((item, index) => {
-          postArr.push(post.title);
-          if (postArr.includes(post.title)) {
-            count.push(index + 1);
-          } else {
-            count.push(1);
-          }
-        });
-      }
-
-      if (post?.images[0] && post?.altTags?.length) {
-        altTags.push(...post.altTags);
-      } else if (post?.images[0]) {
-        altTags.push('');
-      }
-    });
-
-    if (gallery[0]) {
-      setImages(gallery);
-      setTags(altTags);
-      setContent(postArr);
-    }
-    setIsLoading(false);
-  };
 
   const handleSearch = async () => {
     const value = search;
@@ -79,9 +47,42 @@ export default function Posts() {
     setIsLoading(true);
 
     if (value && value.length >= 2) {
-      await _fetchImages(
-        ((await dispatch(searchPosts(value))) as any).payload as Post[]
-      );
+      const posts = ((await dispatch(searchPosts(value))) as any)
+        .payload as Post[];
+
+      const content = posts?.map((post: any) => post.post);
+      let gallery: string[] = [];
+      let postArr: string[] = [];
+      let altTags: string[] = [];
+      let count: number[] = [];
+
+      content?.forEach((post) => {
+        if (post?.images[0]) {
+          gallery.push(...post.images);
+          post.images.forEach((item, index) => {
+            postArr.push(post.title);
+            if (postArr.includes(post.title)) {
+              count.push(index + 1);
+            } else {
+              count.push(1);
+            }
+          });
+        }
+
+        if (post?.images[0] && post?.altTags?.length) {
+          altTags.push(...post.altTags);
+        } else if (post?.images[0]) {
+          altTags.push('');
+        }
+      });
+
+      if (gallery[0]) {
+        setImages(gallery);
+        setTags(altTags);
+        setContent(postArr);
+        setImageNum(count);
+      }
+      setIsLoading(false);
     }
 
     setSearch(value);
@@ -99,7 +100,39 @@ export default function Posts() {
       const posts = ((await dispatch(searchPostsByBlog(value[0].id))) as any)
         .payload as Post[];
 
-      await _fetchImages(posts);
+      const content = posts?.map((post: any) => post.post);
+      let gallery: string[] = [];
+      let postArr: string[] = [];
+      let altTags: string[] = [];
+      let count: number[] = [];
+
+      content?.forEach((post) => {
+        if (post?.images[0]) {
+          gallery.push(...post.images);
+          post.images.forEach((item, index) => {
+            postArr.push(post.title);
+            if (postArr.includes(post.title)) {
+              count.push(index + 1);
+            } else {
+              count.push(1);
+            }
+          });
+        }
+
+        if (post?.images[0] && post?.altTags?.length) {
+          altTags.push(...post.altTags);
+        } else if (post?.images[0]) {
+          altTags.push('');
+        }
+      });
+
+      if (gallery[0]) {
+        setImages(gallery);
+        setTags(altTags);
+        setContent(postArr);
+        setImageNum(count);
+      }
+      setIsLoading(false);
     }
 
     setSelectedBlog(value);
@@ -175,20 +208,59 @@ export default function Posts() {
             </Col>
           </Header>
 
-          {!isLoading &&
-          images.length === 0 &&
-          (search.length || selectedBlog.length) ? (
-            <NoResult hideButton={false} />
-          ) : null}
+          {!isLoading && images.length === 0 && <NoResult hideButton={false} />}
 
-          <ImageGrid
-            loading={isLoading}
-            images={images.map((image, index) => ({
-              title: content[index],
-              src: image,
-              alt: tags[index],
-            }))}
-          />
+          <Row>
+            {!isLoading &&
+              images[0] &&
+              images.map((image: string, index: number) => {
+                return (
+                  <Col
+                    md={4}
+                    lg={3}
+                    sm={6}
+                    xs={12}
+                    key={index}
+                    style={{ margin: '15px 0' }}
+                  >
+                    <Fade bottom duration={800} delay={index * 10}>
+                      <ProductCard
+                        title={content[index]}
+                        tag={tags[index]}
+                        image={image}
+                        index={imageNum[index]}
+                        data={image}
+                      />
+                    </Fade>
+                  </Col>
+                );
+              })}
+
+            {isLoading && (
+              <>
+                <Col md={4} lg={3} sm={6} xs={12} style={{ margin: '15px 0' }}>
+                  <LoaderItem>
+                    <Placeholder />
+                  </LoaderItem>
+                </Col>
+                <Col md={4} lg={3} sm={6} xs={12} style={{ margin: '15px 0' }}>
+                  <LoaderItem>
+                    <Placeholder />
+                  </LoaderItem>
+                </Col>
+                <Col md={4} lg={3} sm={6} xs={12} style={{ margin: '15px 0' }}>
+                  <LoaderItem>
+                    <Placeholder />
+                  </LoaderItem>
+                </Col>
+                <Col md={4} lg={3} sm={6} xs={12} style={{ margin: '15px 0' }}>
+                  <LoaderItem>
+                    <Placeholder />
+                  </LoaderItem>
+                </Col>
+              </>
+            )}
+          </Row>
         </Col>
       </Row>
     </Grid>
