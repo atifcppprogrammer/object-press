@@ -88,13 +88,37 @@ export const REMOVE_IMAGE_MUTATION = gql`
   }
 `;
 
-// upload image
-// export const UPLOAD_IMAGE_STREAM = gql`
-// mutation SingleUploadStream($file: Upload!) {
-//   singleUploadStream(file: $file) {
-//     filename
-//     mimetype
-//     encoding
-//   }
-// }
-//`;
+// create gallery
+export const GALLERY_MUTATION = gql`
+  mutation AddGallery($gallery: CreateGallery!) {
+    addGallery(newGalleryData: $gallery)
+  }
+`;
+
+// update gallery
+export const UPDATE_GALLERY_MUTATION = gql`
+  mutation UpdateGallery($gallery: UpdateGallery!) {
+    updateGallery(updateGalleryData: $gallery)
+  }
+`;
+
+// remove gallery
+export const REMOVE_GALLERY_MUTATION = gql`
+  mutation RemoveGallery($gallery: String!) {
+    removeGallery(galleryId: $gallery)
+  }
+`;
+
+// add gallery image
+export const ADD_IMAGE_MUTATION = gql`
+  mutation AddGalleryImage($gallery: AddGalleryImage!) {
+    addGalleryImage(addGalleryImage: $gallery)
+  }
+`;
+
+// remove gallery image
+export const REMOVE_GALLERY_IMAGE_MUTATION = gql`
+  mutation RemoveGalleryImage($image: RemoveGalleryImage!) {
+    removeGalleryImage(removePostImage: $image)
+  }
+`;

@@ -232,7 +232,6 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
   };
 
   const handleKeywordChange = (value: string) => {
-    console.log(value);
     setKeywords(value);
   };
 
@@ -474,7 +473,7 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
             disabled={!isFormValid}
             overrides={{
               BaseButton: {
-                style: ({ $theme }) => ({
+                style: () => ({
                   width: '50%',
                   borderTopLeftRadius: '3px',
                   borderTopRightRadius: '3px',

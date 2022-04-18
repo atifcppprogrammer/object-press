@@ -8,8 +8,8 @@ import { Post, PostState, NewPost, UpdatePost } from 'types';
 import { RootState } from './index';
 import { query, mutate } from '../graphql/client';
 import {
+  GET_POST_QUERY,
   POSTS_QUERY,
-  POST_QUERY,
   SEARCH_BLOGS_QUERY,
   SEARCH_TITLES_QUERY,
 } from 'graphql/queries';
@@ -42,9 +42,13 @@ export const fetchPost = createAsyncThunk<Post, string>(
   'posts/fetchPost',
   async (id) => {
     try {
-      const post = await query<{ post: string }, Post>('getPost', POST_QUERY, {
-        post: id,
-      });
+      const post = await query<{ post: string }, Post>(
+        'getPost',
+        GET_POST_QUERY,
+        {
+          post: id,
+        }
+      );
 
       return post;
     } catch (error) {

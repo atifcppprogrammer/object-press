@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 // styled components
 import Input from 'components/Input/Input';
 import Button from 'components/Button/Button';
-import { Wrapper, Header, Heading } from 'components/Wrapper.style';
+import { Wrapper, Header } from 'components/Wrapper.style';
 import { Grid } from 'components/FlexBox/FlexBox';
 import Checkbox from 'components/CheckBox/CheckBox';
 import NoResult from 'components/NoResult/NoResult';
@@ -178,13 +178,9 @@ export const Blogs: React.FC = () => {
               boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.3)',
             }}
           >
-            <Col md={1}>
-              <Heading>Blogs</Heading>
-            </Col>
-
-            <Col md={11}>
+            <Col md={12}>
               <Row>
-                <Col md={4} lg={5}>
+                <Col md={3} lg={3}>
                   <Input
                     value={search}
                     placeholder="Search By Blog Title"
@@ -204,7 +200,7 @@ export const Blogs: React.FC = () => {
                   />
                 </Col>
 
-                <Col md={2} lg={2}>
+                <Col md={3} lg={3}>
                   <Button
                     onClick={openDrawer}
                     startEnhancer={() => (
@@ -226,7 +222,7 @@ export const Blogs: React.FC = () => {
                   </Button>
                 </Col>
 
-                <Col md={2} lg={2}>
+                <Col md={3} lg={3}>
                   <Button
                     onClick={handleUpdate}
                     startEnhancer={() => (
@@ -250,7 +246,7 @@ export const Blogs: React.FC = () => {
                   </Button>
                 </Col>
 
-                <Col md={2} lg={2}>
+                <Col md={3} lg={3}>
                   <Button
                     onClick={handleBuild}
                     startEnhancer={() => (

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import Button, { KIND } from 'components/Button/Button';
 import DrawerBox from 'components/DrawerBox/DrawerBox';
 import { Row, Col } from 'components/FlexBox/FlexBox';
 import Input from 'components/Input/Input';
-import { FormFields, FormLabel } from 'components/FormFields/FormFields';
+import { Error, FormFields, FormLabel } from 'components/FormFields/FormFields';
 import {
   Form,
   DrawerTitleWrapper,
@@ -12,54 +12,67 @@ import {
   FieldDetails,
   ButtonGroup,
 } from '../DrawerItems/DrawerItems.style';
-import { useDispatch, useSelector } from 'react-redux';
-import { blogsSelector, fetchBlogs } from 'store/blogs';
+import { useDispatch } from 'react-redux';
 import { CloseDrawer } from 'containers/DrawerItems/DrawerItems';
-// import { addPost } from 'store/posts';
+import { createGallery } from 'store/galleries';
+import { validateDescription } from 'utils';
+import useFormControl from 'hooks/useFormControl';
+import { FormControl } from 'baseui/form-control';
 
 interface Props {
   onClose: CloseDrawer;
 }
 
-const NewGalleryForm: React.FC<Props> = ({ onClose }) => {
-  const [title, setTitle] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
-
+const NewGalleryForm: React.FC<Props> = ({ onClose }: Props) => {
   const dispatch = useDispatch();
+  const [isNameVisited, setIsNameVisited] = useState<boolean>(false);
+  const [name, setName] = useState<string>('');
 
-  const blogs = useSelector(blogsSelector());
-  const [blogsFetched, setBlogsFetched] = useState(false);
-
-  useEffect(() => {
-    if (!blogs?.length && !blogsFetched) {
-      setBlogsFetched(true);
-      dispatch(fetchBlogs());
+  const onNameChangeHandler = (value: string) => {
+    if (!isNameVisited) {
+      setIsNameVisited(true);
     }
-  }, [dispatch, blogs, blogsFetched]);
+
+    setName(value);
+  };
+
+  const {
+    value: description,
+    isValid: descriptionIsValid,
+    onInputChangeHandler: onDescriptionChangeHandler,
+    onInputBlurHandler: onDescriptionBlurHandler,
+    shouldShowError: shouldDescriptionShowError,
+  } = useFormControl(validateDescription);
+
+  const nameIsValid = name.length > 0;
+  const shoulNameShowError = isNameVisited && !nameIsValid;
+  const isFormValid: boolean = nameIsValid && descriptionIsValid;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // try {
-    //   await dispatch(
-    //     addPost({
-    //       post: {
-    //         title,
-    //         description,
-    //       },
-    //     })
-    //   );
-    //
-    //   closeDrawer();
-    // } catch (e) {
-    //   console.log(e);
-    // }
+    if (isFormValid) {
+      try {
+        await dispatch(
+          createGallery({
+            gallery: {
+              name,
+              description,
+            },
+          })
+        );
+      } catch (e) {
+        console.log(e);
+      }
+
+      onClose();
+    }
   };
 
   return (
     <>
       <DrawerTitleWrapper>
-        <DrawerTitle>Add Post</DrawerTitle>
+        <DrawerTitle>Add Gallery</DrawerTitle>
       </DrawerTitleWrapper>
 
       <Form
@@ -89,24 +102,43 @@ const NewGalleryForm: React.FC<Props> = ({ onClose }) => {
             <Col lg={8}>
               <DrawerBox>
                 <FormFields>
-                  <FormLabel>Post Title</FormLabel>
-                  <Input
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    required
-                    maxLegnth={25}
-                    name="name"
-                  />
+                  <FormLabel>Name</FormLabel>
+                  <FormControl
+                    error={
+                      shoulNameShowError && (
+                        <Error>Name should not be empty</Error>
+                      )
+                    }
+                  >
+                    <Input
+                      value={name}
+                      onChange={(e) => onNameChangeHandler(e.target.value)}
+                      name="name"
+                      onBlur={() => setIsNameVisited(true)}
+                      positive={nameIsValid}
+                      error={shoulNameShowError}
+                    />
+                  </FormControl>
                 </FormFields>
 
                 <FormFields>
-                  <FormLabel>Meta Description</FormLabel>
-                  <Input
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    type="text"
-                    name="meta description"
-                  />
+                  <FormLabel>Description</FormLabel>
+                  <FormControl
+                    error={
+                      shouldDescriptionShowError &&
+                      validateDescription(description).errorMessage
+                    }
+                  >
+                    <Input
+                      value={description}
+                      onChange={onDescriptionChangeHandler}
+                      type="text"
+                      name="description"
+                      onBlur={onDescriptionBlurHandler}
+                      positive={validateDescription(description).isValid}
+                      error={shouldDescriptionShowError}
+                    />
+                  </FormControl>
                 </FormFields>
               </DrawerBox>
             </Col>
@@ -136,6 +168,7 @@ const NewGalleryForm: React.FC<Props> = ({ onClose }) => {
 
           <Button
             type="submit"
+            disabled={!isFormValid}
             overrides={{
               BaseButton: {
                 style: ({ $theme }) => ({

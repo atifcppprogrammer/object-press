@@ -1,4 +1,4 @@
-import { useContext, lazy, Suspense } from 'react';
+import React, { useContext, lazy, Suspense } from 'react';
 import { Helmet } from 'react-helmet';
 import { Route, Switch, Redirect, useLocation } from 'react-router-dom';
 import AuthProvider, { AuthContext } from 'context/auth';
@@ -77,6 +77,21 @@ const Routes = () => {
               <Gallery />
             </AdminLayout>
           </PrivateRoute>
+          <PrivateRoute path="/new-gallery">
+            <AdminLayout>
+              <Gallery />
+            </AdminLayout>
+          </PrivateRoute>
+          <PrivateRoute path="/add-image">
+            <AdminLayout>
+              <Gallery />
+            </AdminLayout>
+          </PrivateRoute>
+          <PrivateRoute path="/update-gallery">
+            <AdminLayout>
+              <Gallery />
+            </AdminLayout>
+          </PrivateRoute>
           <PrivateRoute path="/upload">
             <AdminLayout>
               <Gallery />
@@ -112,9 +127,11 @@ const Routes = () => {
               <Settings />
             </AdminLayout>
           </PrivateRoute>
+
           <Route path="/">
             <Login /> <Redirect from="/" to="/" />
           </Route>
+
           <Route component={NotFound} />
         </Switch>
       </Suspense>

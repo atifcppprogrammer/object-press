@@ -223,7 +223,6 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
   };
 
   const handleBlogChange = ({ value }) => {
-    console.log(value);
     setBlogId(value);
   };
 
@@ -277,6 +276,7 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                     placeholder="Blog Title"
                     value={blogId}
                     onChange={handleBlogChange}
+                    searchable={false}
                   />
                 </FormFields>
               </DrawerBox>
@@ -328,9 +328,11 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                     value={content}
                     onChange={onMdEditorChangeHandler}
                   />
-                  {shouldMdEditorShowError ? (
+                  {shouldMdEditorShowError && isMdEditorVisited && (
                     <Error>Content should not be empty</Error>
-                  ) : (
+                  )}
+
+                  {!isMdEditorVisited && (
                     <Message>Content should not be empty</Message>
                   )}
                 </FormFields>
@@ -399,6 +401,7 @@ const NewPostForm: React.FC<Props> = ({ onClose }) => {
                     value={active}
                     onChange={handleActiveChange}
                     status={active}
+                    searchable={false}
                   />
                 </FormFields>
               </DrawerBox>
