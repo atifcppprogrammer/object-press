@@ -77,14 +77,16 @@ export const Blogs: React.FC = () => {
   }
 
   useEffect(() => {
-    if (!fetched || !isOpen) {
+    if (!fetched || search?.length === 0) {
+      getBlogs();
+    } else if (!isOpen && search?.length === 0) {
       getBlogs();
     }
     // eslint-disable-next-line
-  }, [fetched, isOpen]);
+  }, [fetched, isOpen, search]);
 
   useEffect(() => {
-    if (_blogs?.length) {
+    if (_blogs?.length && search?.length >= 2) {
       setBlogs(
         _blogs.filter((blog) => blog.title.toLowerCase().includes(search))
       );
@@ -190,9 +192,10 @@ export const Blogs: React.FC = () => {
                       <i
                         className="fas fa-search"
                         aria-label="search post"
+                        onClick={handleSearch}
                         style={{
-                          cursor: 'pointer',
-                          color: '#00d4b5',
+                          cursor: search.length > 1 ? 'pointer' : '',
+                          color: search.length > 1 ? '#00d4b5' : '',
                           paddingLeft: '15px',
                         }}
                       ></i>

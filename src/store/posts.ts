@@ -60,12 +60,10 @@ export const fetchPost = createAsyncThunk<Post, string>(
 );
 
 export const editPost = createAsyncThunk<
-  Post[],
+  void,
   { post: UpdatePost },
   { rejectValue: string }
 >('posts/editPost', async ({ post }, { rejectWithValue }) => {
-  let result = [];
-
   try {
     await mutate<{ post: UpdatePost }, void>(
       'updatePost',
@@ -74,34 +72,21 @@ export const editPost = createAsyncThunk<
         post: post,
       }
     );
-
-    result = await query<void, Post[]>('getAllPosts', POSTS_QUERY, undefined);
   } catch (error) {
-    console.log(error);
-
     rejectWithValue(error.message);
   }
-
-  return result;
 });
 
 export const addPost = createAsyncThunk<
-  Post[],
+  void,
   { post: NewPost },
   { rejectValue: string }
 >('posts/addPost', async ({ post }, { rejectWithValue }) => {
-  let result = [];
-
   try {
     await mutate<{ post: NewPost }, void>('addPost', POST_MUTATION, { post });
-
-    result = await query<void, Post[]>('getAllPosts', POSTS_QUERY, undefined);
   } catch (error) {
     rejectWithValue(error.message);
-    console.log(error);
   }
-
-  return result;
 });
 
 export const searchPosts = createAsyncThunk<Post[], string>(
@@ -128,7 +113,7 @@ export const searchPosts = createAsyncThunk<Post[], string>(
 );
 
 export const removePost = createAsyncThunk<
-  Post[],
+  void,
   { postId: string },
   { rejectValue: string }
 >('posts/deletePost', async ({ postId }, { rejectWithValue }) => {
@@ -140,10 +125,6 @@ export const removePost = createAsyncThunk<
         post: postId,
       }
     );
-
-    const newPosts = await query<any, Post[]>('getAllPosts', POSTS_QUERY, {});
-
-    return newPosts;
   } catch (error) {
     rejectWithValue(error.message);
   }
@@ -200,7 +181,6 @@ const postsSlice = createSlice({
     });
     builder.addCase(editPost.fulfilled, (state, { payload }) => {
       state.loading = false;
-      state.posts = payload;
     });
     builder.addCase(editPost.rejected, (state, { payload }) => {
       state.error = payload;
@@ -212,7 +192,6 @@ const postsSlice = createSlice({
     });
     builder.addCase(addPost.fulfilled, (state, { payload }) => {
       state.loading = false;
-      state.posts = payload;
     });
     builder.addCase(addPost.rejected, (state, { payload }) => {
       state.error = payload;

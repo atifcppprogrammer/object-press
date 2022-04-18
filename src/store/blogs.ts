@@ -24,7 +24,7 @@ export const fetchBlogs = createAsyncThunk<
 });
 
 export const removeBlog = createAsyncThunk<
-  Blog[],
+  void,
   { blogId: string },
   { rejectValue: string }
 >('blogs/deleteBlog', async ({ blogId }, { rejectWithValue }) => {
@@ -36,17 +36,13 @@ export const removeBlog = createAsyncThunk<
         blog: blogId,
       }
     );
-
-    const newBlogs = await query<any, Blog[]>('getAllBlogs', BLOGS_QUERY, {});
-
-    return newBlogs;
   } catch (error) {
     rejectWithValue(error.message);
   }
 });
 
 export const createBlog = createAsyncThunk<
-  Blog[],
+  void,
   { blog: NewBlog },
   { rejectValue: string }
 >('blogs/createBlog', async ({ blog }, { rejectWithValue }) => {
@@ -54,10 +50,6 @@ export const createBlog = createAsyncThunk<
     await mutate<{ blog: NewBlog }, undefined>('AddBlog', BLOG_MUTATION, {
       blog,
     });
-
-    const newBlogs = await query<any, Blog[]>('getAllBlogs', BLOGS_QUERY, {});
-
-    return newBlogs;
   } catch (error) {
     rejectWithValue(error.message);
   }
@@ -93,7 +85,6 @@ const blogsSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(removeBlog.fulfilled, (state, { payload }) => {
-      state.blogs = payload;
       state.loading = false;
     });
     builder.addCase(removeBlog.rejected, (state, { payload }) => {
@@ -105,7 +96,6 @@ const blogsSlice = createSlice({
       state.loading = true;
     });
     builder.addCase(createBlog.fulfilled, (state, { payload }) => {
-      state.blogs = payload;
       state.loading = false;
     });
     builder.addCase(createBlog.rejected, (state, { payload }) => {

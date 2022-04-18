@@ -156,11 +156,8 @@ export default function Posts() {
   useEffect(() => {
     async function removePosts() {
       setPostsFetched(true);
-      const posts = (
-        (await dispatch(removePostDispatch({ postId: checkedId }))) as any
-      ).payload as Post[];
+      dispatch(removePostDispatch({ postId: checkedId }));
 
-      setPosts(posts);
       setCheckedId('');
       progressDispatch({
         type: 'CANCEL_MODAL',
