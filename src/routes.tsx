@@ -72,7 +72,7 @@ const Routes = () => {
               <Posts />
             </AdminLayout>
           </PrivateRoute>
-          <PrivateRoute path="/gallery">
+          <PrivateRoute path="/galleries">
             <AdminLayout>
               <Gallery />
             </AdminLayout>

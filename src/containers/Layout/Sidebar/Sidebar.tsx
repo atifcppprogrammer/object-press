@@ -29,8 +29,8 @@ const sidebarMenus = [
     icon: <i className="fas fa-file-export" />,
   },
   {
-    name: 'Gallery',
-    path: '/gallery',
+    name: 'Galleries',
+    path: '/galleries',
     exact: true,
     icon: <i className="fas fa-images" />,
   },

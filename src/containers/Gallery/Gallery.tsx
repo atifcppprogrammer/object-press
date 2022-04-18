@@ -22,7 +22,7 @@ export default function Posts() {
     drawerDispatch({
       type: 'OPEN_DRAWER',
       drawerComponent: 'GALLERY_FORM',
-      backUrl: '/gallery',
+      backUrl: '/galleries',
       newUrl: '/new-gallery',
     });
   }, [drawerDispatch]);
@@ -31,7 +31,7 @@ export default function Posts() {
     drawerDispatch({
       type: 'OPEN_DRAWER',
       drawerComponent: 'GALLERY_UPDATE_FORM',
-      backUrl: '/gallery',
+      backUrl: '/galleries',
       newUrl: `/update-gallery`,
     });
   }, [drawerDispatch]);
@@ -40,7 +40,7 @@ export default function Posts() {
     drawerDispatch({
       type: 'OPEN_DRAWER',
       drawerComponent: 'ADD_GALLERY_IMAGE',
-      backUrl: '/gallery',
+      backUrl: '/galleries',
       newUrl: `/add-image`,
     });
   }, [drawerDispatch]);
