@@ -39,8 +39,7 @@
     "start": "react-scripts start",
     "dev": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts build",
-    "format": "yarn prettier --write .",
-    "docs": "typedoc && echo docs.objectpress.io>> docs/CNAME"
+    "format": "yarn prettier --write ."
   },
   "pre-commit": [
     "format"
@@ -61,7 +60,6 @@
     "@types/react-redux": "^7.1.18",
     "@types/react-router-dom": "^5.1.7",
     "pre-commit": "^1.2.2",
-    "prettier": "^2.4.1",
-    "typedoc": "^0.22.13"
+    "prettier": "^2.4.1"
   }
 }
